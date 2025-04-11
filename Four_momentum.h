@@ -10,17 +10,17 @@
 class FourMomentum
 {
     private:
-        std::array<double, 4> four_momentum; // 4-momentum vector with fixed size
+        std::array<double, 4> four_momentum; // 4-momentum array with fixed size
 
     public:
-        // Default constructor
-        FourMomentum();
+        // Default constructor for random momentum
+        FourMomentum(double rest_mass);
 
         // Destructor
         ~FourMomentum();
 
         // Parameterized constructor
-        FourMomentum(double E, double px, double py, double pz);
+        FourMomentum(double rest_mass, double px, double py, double pz);
 
         // Copy constructor
         FourMomentum(const FourMomentum& other);
@@ -41,7 +41,6 @@ class FourMomentum
         double get_pz() const { return four_momentum[3];}
 
         // Setters
-        void set_energy(double E);
         void set_px(double px);
         void set_py(double py);
         void set_pz(double pz);
@@ -50,5 +49,5 @@ class FourMomentum
         FourMomentum operator+(const FourMomentum& other) const;
 
         // Dot product
-        double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2) const;
+        friend double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2);
 }
