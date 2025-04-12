@@ -20,36 +20,43 @@ enum class ParticleType
     Photon,
 };
 
-// Struct for particle properties
-struct ParticleProperties
+// Class for particle properties
+class ParticleProperties
 {
-    ParticleType type; // Type of the particle
-    double mass; // Mass in MeV/c^2
-    double charge; // Charge in e
-    string name; // Name of the particle
+    private:
+        ParticleType type; // Type of the particle
+        double mass; // Mass in MeV/c^2
+        double charge; // Charge in e
 
-    // Default constructor
-    ParticleProperties();
+    public:
+        // Default constructor
+        ParticleProperties();
 
-    // Constructor for ParticleProperties
-    ParticleProperties(ParticleType type, double mass, double charge, const string& name);
+        // Constructor for ParticleProperties
+        ParticleProperties(ParticleType type, double mass, double charge, const string& name);
 
-    // Destructor
-    ~ParticleProperties();
+        // Destructor
+        ~ParticleProperties();
 
-    // Copy constructor
-    ParticleProperties(const ParticleProperties& other);
+        // Copy constructor
+        ParticleProperties(const ParticleProperties& other);
 
-    // Move constructor
-    ParticleProperties(ParticleProperties&& other);
+        // Move constructor
+        ParticleProperties(ParticleProperties&& other);
 
-    // Copy assignment operator
-    ParticleProperties& operator=(const ParticleProperties& other);
+        // Copy assignment operator
+        ParticleProperties& operator=(const ParticleProperties& other);
 
-    // Move assignment operator
-    ParticleProperties& operator=(ParticleProperties&& other);
+        // Move assignment operator
+        ParticleProperties& operator=(ParticleProperties&& other);
+
+        // Getters for particle properties
+        ParticleType get_type() const { return type; }
+        double get_mass() const { return mass; }
+        double get_charge() const { return charge; }
+        string get_name() const { return name; }
 };
 
 
 // Function to get particle properties by type using static map
-static ParticleProperties get_particle_properties(ParticleType type);
+ParticleProperties get_particle_properties(ParticleType type);

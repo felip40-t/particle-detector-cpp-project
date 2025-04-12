@@ -10,7 +10,7 @@
 
 using std::string;
 
-#include "Four_momentum.h"
+#include "FourMomentum.h"
 #include "ParticleInfo.h"
 
 class Particle

@@ -2,9 +2,7 @@
 
 // Default constructor for ParticleProperties
 ParticleProperties::ParticleProperties()
-{
-    *this = ParticleInfo::get_particle_properties(ParticleType::Particle); // Initialize with default particle properties
-}
+    : ParticleProperties(get_particle_properties(ParticleType::Particle)) {}
 
 // Constructor for ParticleProperties
 ParticleProperties::ParticleProperties(ParticleType type, double mass, double charge, const string& name)
@@ -55,7 +53,7 @@ ParticleProperties& ParticleProperties::operator=(ParticleProperties&& other)
 
 
 // Define the static map to hold particle properties
-static ParticleProperties get_particle_properties(ParticleType type)
+ParticleProperties get_particle_properties(ParticleType type)
 {
     // Map to hold particle properties
     static std::map<ParticleType, ParticleProperties> particle_map = {

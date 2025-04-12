@@ -26,32 +26,3 @@ class Lepton : public Particle
         Lepton& operator=(Lepton&& other);
 
 };
-
-
-class Electron : public Lepton
-{
-    public:
-        // Default constructor
-        Electron();
-
-        // Destructor
-        ~Electron() override = default;
-
-        // Parameterized constructor
-        Electron(double px, double py, double pz);
-
-        // Copy constructor
-        Electron(const Electron& other) : Lepton(other) {}
-
-        // Move constructor
-        Electron(Electron&& other) : Lepton(std::move(other)) {}
-
-        // Copy assignment operator
-        Electron& operator=(const Electron& other);
-
-        // Move assignment operator
-        Electron& operator=(Electron&& other);
-
-        // Override print function
-        void print_data() const override;
-};
