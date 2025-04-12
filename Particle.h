@@ -8,22 +8,26 @@
 #include <random>
 #include <string>
 
+using std::string;
+
 #include "Four_momentum.h"
+#include "ParticleInfo.h"
 
 class Particle
 {
-    private:
-        std::string name; // Particle name
-        double rest_mass; // Particle rest mass in MeV
+    protected:
+        ParticleProperties properties; // Particle properties
         std::unique_ptr<FourMomentum> four_momentum; // Particle 4-momentum
-        double charge; // Particle charge in e
 
     public:
         // Virtual destructor
-        virtual ~Particle();
+        virtual ~Particle() = default;
+
+        // Default constructor
+        Particle();
 
         // Parameterized constructor
-        Particle(const std::string& name, double rest_mass, double charge, double px, double py, double pz);
+        Particle(double px, double py, double pz);
 
         // Copy constructor
         Particle(const Particle& other);
@@ -38,5 +42,8 @@ class Particle
         Particle& operator=(Particle&& other);
 
         // Virtual print function
-        virtual void print() const;
-}
+        virtual void print_data() const;
+
+        // Function to get the 4-momentum of the particle
+        FourMomentum get_four_momentum() const { return *four_momentum; }
+};

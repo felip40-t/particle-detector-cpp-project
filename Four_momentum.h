@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <iostream>
 #include <vector>
 #include <memory>
 #include <array>
@@ -47,6 +46,9 @@ class FourMomentum
 
         // Overloaded sum operator
         FourMomentum operator+(const FourMomentum& other) const;
+
+        // Overloaded subtraction operator
+        FourMomentum operator-(const FourMomentum& other) const;
 
         // Dot product
         friend double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2);

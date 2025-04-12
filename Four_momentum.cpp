@@ -195,6 +195,17 @@ FourMomentum FourMomentum::operator+(const FourMomentum& other) const
     );
 }
 
+// Overloaded subtraction operator
+FourMomentum FourMomentum::operator-(const FourMomentum& other) const
+{
+    return FourMomentum(
+        four_momentum[0] - other.four_momentum[0],
+        four_momentum[1] - other.four_momentum[1],
+        four_momentum[2] - other.four_momentum[2],
+        four_momentum[3] - other.four_momentum[3]
+    );
+}
+
 // Dot product function
 double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2)
 {
