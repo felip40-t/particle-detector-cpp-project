@@ -12,6 +12,25 @@ using std::string;
 
 #include "Particle.h"
 
+
+namespace SubDetectorInfo
+{
+    // Enumerator class for sub-detector types
+    enum class SubDetectorType
+    {
+        Default,
+        Tracker,
+        MuonChamber,
+        HadronCalorimeter,
+        EMCalorimeter,
+    };
+
+
+    // Function to get sub-detector name based on type using static map
+    const std::string& get_subdetector_names(SubDetectorType type);
+
+} // namespace SubDetectorInfo
+
 class SubDetector
 {
     protected:
@@ -43,7 +62,7 @@ class SubDetector
         SubDetector& operator=(SubDetector&& other);
 
         // Getters for sub-detector properties
-        SubDetectorType get_type() const { return type; }
+        SubDetectorInfo::SubDetectorType get_type() const { return type; }
         string get_name() const { return name; }
         double get_efficiency() const { return efficiency; }
         double get_resolution() const { return resolution; }
@@ -55,21 +74,3 @@ class SubDetector
         virtual void detect(const Particle& particle) = 0;
 
 };
-
-namespace SubDetectorInfo
-{
-    // Enumerator class for sub-detector types
-    enum class SubDetectorType
-    {
-        Default,
-        Tracker,
-        MuonChamber,
-        HadronCalorimeter,
-        EMCalorimeter,
-    };
-
-
-    // Function to get sub-detector name based on type using static map
-    const std::string& get_subdetector_names(SubDetectorType type);
-
-} // namespace SubDetectorInfo

@@ -1,4 +1,4 @@
-#include "Four_momentum.h"
+#include "FourMomentum.h"
 
 
 // Default constructor: give random momentum and make photon-like
@@ -131,7 +131,7 @@ double FourMomentum::get_component(int index) const
 // Setters for momentum components
 void FourMomentum::set_px(double px) 
 {
-    double rest_mass_sqrd = four_momentum[0]**2 - four_momentum[1]**2 - four_momentum[2]**2 - four_momentum[3]**2;
+    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
     // Ensure px is finite and real
     if (std::isnan(px) || std::isinf(px))
     {
@@ -155,7 +155,7 @@ void FourMomentum::set_px(double px)
 
 void FourMomentum::set_py(double py) 
 {
-    double rest_mass_sqrd = four_momentum[0]**2 - four_momentum[1]**2 - four_momentum[2]**2 - four_momentum[3]**2;
+    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
     // Ensure py is finite and real
     if (std::isnan(py) || std::isinf(py))
     {
@@ -179,7 +179,7 @@ void FourMomentum::set_py(double py)
 
 void FourMomentum::set_pz(double pz) 
 {
-    double rest_mass_sqrd = four_momentum[0]**2 - four_momentum[1]**2 - four_momentum[2]**2 - four_momentum[3]**2;
+    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
     // Ensure pz is finite and real
     if (std::isnan(pz) || std::isinf(pz))
     {

@@ -7,6 +7,7 @@
 #include <array>
 #include <random>
 #include <string>
+#include <stdexcept>
 
 using std::string;
 

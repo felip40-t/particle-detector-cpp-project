@@ -4,7 +4,7 @@
 Tracker::Tracker()
 {
     type = SubDetectorInfo::SubDetectorType::Tracker;
-    name = SubDetectorInfo::get_subdetector_names(SubDetectorType::Tracker);
+    name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
     efficiency = 1.0;
     resolution = 0.0;
     layers = 1;
@@ -16,7 +16,7 @@ Tracker::Tracker(double efficiency, double resolution, int layers, string materi
     : SubDetector(efficiency, resolution)
 {
     type = SubDetectorInfo::SubDetectorType::Tracker;
-    name = SubDetectorInfo::get_subdetector_names(SubDetectorType::Tracker);
+    name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
 
     if (layers < 0 || std::isnan(layers) || std::isinf(layers)) 
     {
@@ -32,15 +32,14 @@ Tracker::Tracker(double efficiency, double resolution, int layers, string materi
         }
     }
     this->layers = layers;
-    switch (material)
+    if (material == "Silicon")
     {
-        case "Silicon":
-            this->material = "Silicon";
-            break;
-        default:
-            this->material = "Silicon";
-            std::cout << "Tracker: Material not recognized. Setting to Silicon." << std::endl;
-            break;
+        this->material = "Silicon";
+    }
+    else
+    {
+        this->material = "Silicon";
+        std::cout << "Tracker: Material not recognized. Setting to Silicon." << std::endl;
     }
 }
 

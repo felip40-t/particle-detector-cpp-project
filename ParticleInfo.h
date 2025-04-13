@@ -29,6 +29,7 @@ namespace ParticleInfo
             ParticleType type; // Type of the particle
             double mass; // Mass in MeV/c^2
             double charge; // Charge in e
+            string name; // Name of the particle
 
         public:
             // Default constructor

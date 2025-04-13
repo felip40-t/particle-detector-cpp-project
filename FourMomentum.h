@@ -5,6 +5,9 @@
 #include <memory>
 #include <array>
 #include <random>
+#include <string>
+#include <stdexcept>
+#include <iostream>
 
 class FourMomentum
 {
@@ -28,10 +31,10 @@ class FourMomentum
         FourMomentum(FourMomentum&& other);
 
         // Copy assignment
-        FourMomentum& operator=(const Particle& other);
+        FourMomentum& operator=(const FourMomentum& other);
 
         // Move assignment
-        FourMomentum& operator=(Particle&& other)
+        FourMomentum& operator=(FourMomentum&& other);
 
         // Getter
         double get_component(int index) const;
@@ -49,4 +52,4 @@ class FourMomentum
 
         // Dot product
         friend double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2);
-}
+};

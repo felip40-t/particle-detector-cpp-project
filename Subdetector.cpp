@@ -4,14 +4,14 @@
 // Default constructor
 SubDetector::SubDetector()
     : type(SubDetectorInfo::SubDetectorType::Default), 
-      name(SubDetectorInfo::get_subdetector_names(SubDetectorType::Default)),
+      name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default)),
       efficiency(1.0),
       resolution(0.0) {}
 
 // Parameterized constructor
 SubDetector::SubDetector(double efficiency, double resolution)
     : type(SubDetectorInfo::SubDetectorType::Default), 
-      name(SubDetectorInfo::get_subdetector_names(SubDetectorType::Default))
+      name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default))
 {
     if (efficiency < 0.0 || efficiency > 1.0 || std::isnan(efficiency))
     {
@@ -59,7 +59,7 @@ SubDetector::SubDetector(SubDetector&& other)
       resolution(other.resolution) 
 {
     other.type = SubDetectorInfo::SubDetectorType::Default;
-    other.name = SubDetectorInfo::get_subdetector_names(SubDetectorType::Default);
+    other.name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default);
     other.efficiency = 1.0;
     other.resolution = 0.0;
 }
@@ -86,7 +86,7 @@ SubDetector& SubDetector::operator=(SubDetector&& other)
         resolution = other.resolution;
 
         other.type = SubDetectorInfo::SubDetectorType::Default;
-        other.name = SubDetectorInfo::get_subdetector_names(SubDetectorType::Default);
+        other.name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default);
         other.efficiency = 1.0;
         other.resolution = 0.0;
     }
@@ -102,15 +102,10 @@ namespace SubDetectorInfo
         // Map to hold sub-detector names
         static std::map<SubDetectorType, string> subdetector_names = {
             {SubDetectorType::Default, "Default"},
-            {SubDetectorType::Calorimeter, "Calorimeter"},
             {SubDetectorType::Tracker, "Tracker"},
             {SubDetectorType::MuonChamber, "Muon Chamber"},
             {SubDetectorType::HadronCalorimeter, "Hadron Calorimeter"},
             {SubDetectorType::EMCalorimeter, "EM Calorimeter"},
-            {SubDetectorType::SiliconTracker, "Silicon Tracker"},
-            {SubDetectorType::TPCTracker, "TPC Tracker"},
-            {SubDetectorType::DTMuonChamber, "DT Muon Chamber"},
-            {SubDetectorType::CSCMuonChamber, "CSC Muon Chamber"}
         };
         auto it = subdetector_names.find(type);
         if (it == subdetector_names.end()) 
