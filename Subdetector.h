@@ -10,14 +10,12 @@
 
 using std::string;
 
-#include "FourMomentum.h"
 #include "Particle.h"
-#include "SubdetectorInfo.h"
 
 class SubDetector
 {
     protected:
-        SubDetectorType type; // Sub-detector type
+        SubDetectorInfo::SubDetectorType type; // Sub-detector type
         string name; // Sub-detector name
         double efficiency; // Efficiency of the sub-detector
         double resolution; // Resolution of the sub-detector
@@ -25,6 +23,9 @@ class SubDetector
     public:
         // Default constructor
         SubDetector();
+
+        // Parameterized constructor
+        SubDetector(double efficiency, double resolution);
 
         // Virtual destructor
         virtual ~SubDetector() = default;
@@ -55,21 +56,20 @@ class SubDetector
 
 };
 
-// Enumerator class for sub-detector types
-enum class SubDetectorType
+namespace SubDetectorInfo
 {
-    Default,
-    Calorimeter,
-    Tracker,
-    MuonChamber,
-    HadronCalorimeter,
-    EMCalorimeter,
-    SiliconTracker,
-    TPCTracker,
-    DTMuonChamber,
-    CSCMuonChamber,
-};
+    // Enumerator class for sub-detector types
+    enum class SubDetectorType
+    {
+        Default,
+        Tracker,
+        MuonChamber,
+        HadronCalorimeter,
+        EMCalorimeter,
+    };
 
 
-// Function to get sub-detector name based on type using static map
-string get_subdetector_names(SubDetectorType type);
+    // Function to get sub-detector name based on type using static map
+    const std::string& get_subdetector_names(SubDetectorType type);
+
+} // namespace SubDetectorInfo

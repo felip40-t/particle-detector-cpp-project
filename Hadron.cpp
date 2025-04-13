@@ -5,18 +5,18 @@
 Hadron::Hadron()
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Hadron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
     // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.mass);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
 Hadron::Hadron(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Hadron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
     // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.mass, px, py, pz);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
@@ -43,18 +43,18 @@ Hadron& Hadron::operator=(Hadron&& other)
 Proton::Proton()
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Proton);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
     // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.mass);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
 Proton::Proton(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Proton);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
     // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.mass, px, py, pz);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
@@ -81,18 +81,18 @@ Proton& Proton::operator=(Proton&& other)
 Neutron::Neutron()
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Neutron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
     // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.mass);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
 Neutron::Neutron(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Neutron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
     // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.mass, px, py, pz);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator

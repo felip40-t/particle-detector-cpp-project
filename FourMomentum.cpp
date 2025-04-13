@@ -110,6 +110,24 @@ FourMomentum& FourMomentum::operator=(FourMomentum&& other)
     return *this;
 }
 
+// Getter for momentum components
+double FourMomentum::get_component(int index) const
+{
+    if (index < 0 || index > 3)
+    {
+        try 
+        {
+            throw std::out_of_range("FourMomentum: Index out of range. Must be between 0 and 3.");
+        } 
+        catch (const std::out_of_range& e) 
+        {
+            std::cout << e.what() << std::endl;
+            return 0.0; // Return zero for out-of-range index
+        }
+    }
+    return four_momentum[index];
+}
+
 // Setters for momentum components
 void FourMomentum::set_px(double px) 
 {
@@ -182,6 +200,7 @@ void FourMomentum::set_pz(double pz)
     double momentum_sqrd = four_momentum[1] * four_momentum[1] + four_momentum[2] * four_momentum[2] + four_momentum[3] * four_momentum[3]; 
     four_momentum[0] = sqrt(momentum_sqrd + rest_mass_sqrd);
 }
+
 
 
 // Overloaded sum operator

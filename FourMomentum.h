@@ -33,11 +33,8 @@ class FourMomentum
         // Move assignment
         FourMomentum& operator=(Particle&& other)
 
-        // Getters
-        double get_energy() const { return four_momentum[0];}
-        double get_px() const { return four_momentum[1];}
-        double get_py() const { return four_momentum[2];}
-        double get_pz() const { return four_momentum[3];}
+        // Getter
+        double get_component(int index) const;
 
         // Setters
         void set_px(double px);

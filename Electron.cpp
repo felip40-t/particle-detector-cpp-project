@@ -6,18 +6,18 @@
 Electron::Electron()
 {
     // Get electron properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Electron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
     // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.mass);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
 Electron::Electron(double px, double py, double pz)
 {
     // Get electron properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Electron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
     // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.mass, px, py, pz);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
@@ -45,18 +45,18 @@ Electron& Electron::operator=(Electron&& other)
 Positron::Positron()
 {
     // Get positron properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Positron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
     // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.mass);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
 Positron::Positron(double px, double py, double pz)
 {
     // Get positron properties
-    ParticleProperties properties = get_particle_properties(ParticleType::Positron);
+    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
     // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.mass, px, py, pz);
+    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator

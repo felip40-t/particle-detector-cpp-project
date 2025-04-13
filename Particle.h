@@ -16,7 +16,7 @@ using std::string;
 class Particle
 {
     protected:
-        ParticleProperties properties; // Particle properties
+        ParticleInfo::ParticleProperties properties; // Particle properties
         std::unique_ptr<FourMomentum> four_momentum; // Particle 4-momentum
 
     public:
@@ -46,4 +46,7 @@ class Particle
 
         // Function to get the 4-momentum of the particle
         FourMomentum get_four_momentum() const { return *four_momentum; }
-};
+
+        // Function to get the properties of the particle
+        ParticleInfo::ParticleProperties get_properties() const { return properties; }
+    };
