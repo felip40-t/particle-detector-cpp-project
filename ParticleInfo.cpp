@@ -5,7 +5,7 @@ namespace ParticleInfo
 
     // Default constructor for ParticleProperties
     ParticleProperties::ParticleProperties()
-        : ParticleProperties(get_particle_properties(ParticleType::Particle)) {}
+        : type(ParticleType::Particle), mass(0.0), charge(0.0), name("Unknown") {}
 
     // Constructor for ParticleProperties
     ParticleProperties::ParticleProperties(ParticleType type, double mass, double charge, const string& name)
@@ -20,10 +20,7 @@ namespace ParticleInfo
 
     // Move constructor for ParticleProperties
     ParticleProperties::ParticleProperties(ParticleProperties&& other)
-        : type(other.type), mass(other.mass), charge(other.charge), name(std::move(other.name))
-    {
-        other = ParticleProperties(); // Reset the moved-from object
-    }
+        : type(other.type), mass(other.mass), charge(other.charge), name(std::move(other.name)) {}
 
     // Copy assignment operator for ParticleProperties
     ParticleProperties& ParticleProperties::operator=(const ParticleProperties& other)
@@ -47,19 +44,16 @@ namespace ParticleInfo
             mass = other.mass;
             charge = other.charge;
             name = std::move(other.name);
-            other = ParticleProperties(); // Reset the moved-from object
         }
         return *this;
     }
-
-
 
 
     // Define the static map to hold particle properties
     const ParticleProperties& get_particle_properties(ParticleType type)
     {
         // Map to hold particle properties
-        static std::map<ParticleType, ParticleProperties> particle_map = {
+        static const std::map<ParticleType, ParticleProperties> particle_map = {
             {ParticleType::Particle, ParticleProperties(ParticleType::Particle, 0.0, 0.0, "Unknown")},
             {ParticleType::Lepton, ParticleProperties(ParticleType::Lepton, 0.0, 0.0, "Lepton")},
             {ParticleType::Hadron, ParticleProperties(ParticleType::Hadron, 0.0, 0.0, "Hadron")},
@@ -74,11 +68,11 @@ namespace ParticleInfo
         auto it = particle_map.find(type);
         if (it == particle_map.end())
         {
-            return particle_map[ParticleType::Particle]; // Return default particle properties if type not found
+            return particle_map.at(ParticleType::Particle); // Return default particle properties if type not found
         }
         else
         {
-            return particle_map[type];
+            return particle_map.at(type);
         }
     }
 

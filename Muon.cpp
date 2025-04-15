@@ -1,27 +1,26 @@
-#include "Electron.h"
+#include "Muon.h"
 
-
-// Electron class implementation
+// Muon class implementation
 // Default constructor
-Electron::Electron()
+Muon::Muon()
 {
-    // Get electron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
+    // Get muon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Muon);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
-Electron::Electron(double px, double py, double pz)
+Muon::Muon(double px, double py, double pz)
 {
-    // Get electron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
+    // Get muon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Muon);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
-Electron& Electron::operator=(const Electron& other)
+Muon& Muon::operator=(const Muon& other)
 {
     if (this != &other) 
     {
@@ -31,7 +30,7 @@ Electron& Electron::operator=(const Electron& other)
 }
 
 // Move assignment operator
-Electron& Electron::operator=(Electron&& other)
+Muon& Muon::operator=(Muon&& other)
 {
     if (this != &other) 
     {
@@ -40,41 +39,41 @@ Electron& Electron::operator=(Electron&& other)
     return *this;
 }
 
-// Positron class implementation
+// Antimuon class implementation
 // Default constructor
-Positron::Positron()
+Antimuon::Antimuon()
 {
-    // Get positron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
+    // Get antimuon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Antimuon);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
-Positron::Positron(double px, double py, double pz)
+Antimuon::Antimuon(double px, double py, double pz)
 {
-    // Get positron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
+    // Get antimuon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Antimuon);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
-Positron& Positron::operator=(const Positron& other)
+Antimuon& Antimuon::operator=(const Antimuon& other)
 {
     if (this != &other) 
     {
-        Electron::operator=(other); // Call base class assignment operator
+        Muon::operator=(other); // Call base class assignment operator
     }
     return *this;
 }
 
 // Move assignment operator
-Positron& Positron::operator=(Positron&& other)
+Antimuon& Antimuon::operator=(Antimuon&& other)
 {
     if (this != &other) 
     {
-        Electron::operator=(std::move(other)); // Call base class move assignment operator
+        Muon::operator=(std::move(other)); // Call base class move assignment operator
     }
     return *this;
 }

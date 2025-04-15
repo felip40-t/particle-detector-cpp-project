@@ -15,7 +15,10 @@ class FourMomentum
         std::array<double, 4> four_momentum; // 4-momentum array with fixed size
 
     public:
-        // Default constructor for random momentum
+        // Default constructor 
+        FourMomentum() = default;
+        
+        // Constructor for random momentum
         FourMomentum(double rest_mass);
 
         // Destructor
@@ -50,6 +53,10 @@ class FourMomentum
         // Overloaded subtraction operator
         FourMomentum operator-(const FourMomentum& other) const;
 
-        // Dot product
-        friend double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2);
+        // Overloaded multiplication operator (scalar product)
+        double operator*(const FourMomentum& other) const;
+
 };
+
+// Reconstruct function
+FourMomentum reconstruct(double E, double px, double py, double pz);

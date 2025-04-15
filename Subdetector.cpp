@@ -6,10 +6,11 @@ SubDetector::SubDetector()
     : type(SubDetectorInfo::SubDetectorType::Default), 
       name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default)),
       efficiency(1.0),
-      resolution(0.0) {}
+      resolution(0.0),
+      uncertainty(0.0) {}
 
 // Parameterized constructor
-SubDetector::SubDetector(double efficiency, double resolution)
+SubDetector::SubDetector(double efficiency, double resolution, double uncertainty)
     : type(SubDetectorInfo::SubDetectorType::Default), 
       name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default))
 {
@@ -17,7 +18,7 @@ SubDetector::SubDetector(double efficiency, double resolution)
     {
         try
         {
-            throw std::invalid_argument("SubDetector: Efficiency must be between 0 and 1 and real.");
+            throw std::invalid_argument("SubDetector: Efficiency must be between 0 and 1.");
         } 
         catch (const std::invalid_argument& e) 
         {
@@ -41,7 +42,20 @@ SubDetector::SubDetector(double efficiency, double resolution)
         }
     }
     this->resolution = resolution;
-
+    if (uncertainty < 0.0 || std::isnan(uncertainty) || std::isinf(uncertainty))
+    {
+        try
+        {
+            throw std::invalid_argument("SubDetector: Uncertainty must be non-negative, finite and real.");
+        } 
+        catch (const std::invalid_argument& e) 
+        {
+            std::cout << e.what() << std::endl;
+            std::cout << "Setting uncertainty to 0.0." << std::endl;
+            uncertainty = 0.0;
+        }
+    }
+    this->uncertainty = uncertainty;
 }
 
 // Copy constructor
@@ -49,20 +63,16 @@ SubDetector::SubDetector(const SubDetector& other)
     : type(other.type),
       name(other.name),
       efficiency(other.efficiency),
-      resolution(other.resolution) {}
+      resolution(other.resolution),
+      uncertainty(other.uncertainty) {}
 
 // Move constructor
 SubDetector::SubDetector(SubDetector&& other)
     : type(other.type),
       name(std::move(other.name)),
       efficiency(other.efficiency),
-      resolution(other.resolution) 
-{
-    other.type = SubDetectorInfo::SubDetectorType::Default;
-    other.name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default);
-    other.efficiency = 1.0;
-    other.resolution = 0.0;
-}
+      resolution(other.resolution),
+      uncertainty(other.uncertainty) {}
 
 // Copy assignment operator
 SubDetector& SubDetector::operator=(const SubDetector& other)
@@ -72,6 +82,7 @@ SubDetector& SubDetector::operator=(const SubDetector& other)
         name = other.name;
         efficiency = other.efficiency;
         resolution = other.resolution;
+        uncertainty = other.uncertainty;
     }
     return *this;
 }
@@ -84,38 +95,22 @@ SubDetector& SubDetector::operator=(SubDetector&& other)
         name = std::move(other.name);
         efficiency = other.efficiency;
         resolution = other.resolution;
-
-        other.type = SubDetectorInfo::SubDetectorType::Default;
-        other.name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default);
-        other.efficiency = 1.0;
-        other.resolution = 0.0;
+        uncertainty = other.uncertainty;
     }
     return *this;
 }
 
-namespace SubDetectorInfo
+// Print function   
+// Print function
+void SubDetector::print() const
 {
+    std::cout << "Sub-detector: " << name << std::endl;
+    std::cout << "Efficiency: " << efficiency << std::endl;
+    std::cout << "Resolution: " << resolution << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << std::endl;
+}
 
-    // Define the static map to hold sub-detector names
-    const std::string& get_subdetector_names(SubDetectorType type)
-    {
-        // Map to hold sub-detector names
-        static std::map<SubDetectorType, string> subdetector_names = {
-            {SubDetectorType::Default, "Default"},
-            {SubDetectorType::Tracker, "Tracker"},
-            {SubDetectorType::MuonChamber, "Muon Chamber"},
-            {SubDetectorType::HadronCalorimeter, "Hadron Calorimeter"},
-            {SubDetectorType::EMCalorimeter, "EM Calorimeter"},
-        };
-        auto it = subdetector_names.find(type);
-        if (it == subdetector_names.end()) 
-        {
-            return subdetector_names[SubDetectorType::Default]; // Return default name if not found
-        }
-        else 
-        {
-            return subdetector_names[type];
-        }
-    }
-
-} // namespace SubDetectorInfo
+// Helper function to round a value to the nearest resolution
+double roundToResolution(double value, double resolution) {
+    return std::round(value / resolution) * resolution;
+}

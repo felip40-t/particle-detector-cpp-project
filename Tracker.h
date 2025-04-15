@@ -13,7 +13,7 @@ class Tracker : public SubDetector
         Tracker();
 
         // Parameterized constructor
-        Tracker(double efficiency, double resolution, int layers, string material);
+        Tracker(double efficiency, double resolution, double uncertainty, int layers, string material);
 
         // Destructor
         ~Tracker() override = default;

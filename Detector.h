@@ -6,10 +6,14 @@ class Detector
 {
     private:
         std::vector<std::unique_ptr<SubDetector>> subdetectors; 
+        std::string name; // Name of the detector
 
     public:
         // Default constructor
-        Detector() = default;
+        Detector() : name("Default Detector") {};
+
+        // Parameterized constructor
+        Detector(const std::string& name) : name(name) {};
 
         // Destructor
         ~Detector() = default;

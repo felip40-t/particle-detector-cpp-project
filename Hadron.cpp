@@ -5,7 +5,7 @@
 Hadron::Hadron()
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
@@ -14,7 +14,7 @@ Hadron::Hadron()
 Hadron::Hadron(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Hadron);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
@@ -43,7 +43,7 @@ Hadron& Hadron::operator=(Hadron&& other)
 Proton::Proton()
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
@@ -52,7 +52,7 @@ Proton::Proton()
 Proton::Proton(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Proton);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
@@ -81,7 +81,7 @@ Proton& Proton::operator=(Proton&& other)
 Neutron::Neutron()
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
@@ -90,7 +90,7 @@ Neutron::Neutron()
 Neutron::Neutron(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Neutron);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }

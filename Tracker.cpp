@@ -7,13 +7,14 @@ Tracker::Tracker()
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
     efficiency = 1.0;
     resolution = 0.0;
+    uncertainty = 0.0;
     layers = 1;
     material = "Default Material";
 }
 
 // Parameterized constructor
-Tracker::Tracker(double efficiency, double resolution, int layers, string material)
-    : SubDetector(efficiency, resolution)
+Tracker::Tracker(double efficiency, double resolution, double uncertainty, int layers, string material)
+    : SubDetector(efficiency, resolution, uncertainty)
 {
     type = SubDetectorInfo::SubDetectorType::Tracker;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
@@ -49,11 +50,7 @@ Tracker::Tracker(const Tracker& other)
 
 // Move constructor
 Tracker::Tracker(Tracker&& other)
-    : SubDetector(std::move(other)), layers(other.layers), material(std::move(other.material)) 
-{
-    other.layers = 1;
-    other.material = "Default Material";
-}
+    : SubDetector(std::move(other)), layers(other.layers), material(std::move(other.material)) {}
 
 // Copy assignment operator
 Tracker& Tracker::operator=(const Tracker& other) 
@@ -75,8 +72,6 @@ Tracker& Tracker::operator=(Tracker&& other)
         SubDetector::operator=(std::move(other));
         layers = other.layers;
         material = std::move(other.material);
-        other.layers = 1;
-        other.material = "Default Material";
     }
     return *this;
 }
@@ -84,9 +79,10 @@ Tracker& Tracker::operator=(Tracker&& other)
 // Print function
 void Tracker::print() const 
 {
-    std::cout << "Tracker: " << name << std::endl;
+    std::cout << "Sub-detector: " << name << std::endl;
     std::cout << "Efficiency: " << efficiency << std::endl;
     std::cout << "Resolution: " << resolution << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << std::endl;
     std::cout << "Layers: " << layers << std::endl;
     std::cout << "Material: " << material << std::endl;
 }
@@ -94,29 +90,35 @@ void Tracker::print() const
 // Detect function - prints momentum vector if detected
 void Tracker::detect(const Particle& particle)
 {
+    measurement = SubDetectorInfo::Measurement(); // Reset measurement for each detection
     // Simulate detection
     // Check if particle is charged
     if (particle.get_properties().get_charge() != 0)
     {
         // Simulate detection with efficiency
-        std::random_device random_device;
-        std::mt19937 generator(random_device());
+        static std::random_device random_device;
+        static std::mt19937 generator(random_device());
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         double random_value = distribution(generator);
         if (random_value < efficiency)
         {
+            measurement.track = true; // Set the track flag to true
+            measurement.charge = particle.get_properties().get_charge(); // Set the charge of the particle
+        
             std::cout << "Particle detected in " << name << " with momentum: \n";
             std::cout << "[";
             // Simulate resolution smearing effect for each component of the particle's momentum
             for (int i = 1; i <= 3; ++i)
             {
-                // generate normal distribution with mean = 0 and stddev = resolution
-                std::normal_distribution<double> normal_distribution(0.0, resolution);
+                // generate normal distribution with mean = 0 and stddev = uncertainty
+                std::normal_distribution<double> normal_distribution(0.0, uncertainty);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                std::cout << smeared_value;
+                std::cout << roundToResolution(smeared_value, resolution);
+                measurement.momentum[i - 1] = roundToResolution(smeared_value, resolution); // Store the smeared momentum value
                 if (i < 3) std::cout << ", ";
             }
             std::cout << "]" << std::endl;
         }
     }
 }
+

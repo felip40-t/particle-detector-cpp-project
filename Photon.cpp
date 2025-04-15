@@ -1,25 +1,24 @@
-#include "Lepton.h"
+#include "Photon.h"
 
-// Default constructor
-Lepton::Lepton()
+Photon::Photon()
 {
-    // Get lepton properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Lepton);
+    // Get photon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Photon);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
 
 // Parameterized constructor
-Lepton::Lepton(double px, double py, double pz)
+Photon::Photon(double px, double py, double pz)
 {
-    // Get lepton properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Lepton);
+    // Get photon properties
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Photon);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
 
 // Copy assignment operator
-Lepton& Lepton::operator=(const Lepton& other)
+Photon& Photon::operator=(const Photon& other)
 {
     if (this != &other) 
     {
@@ -29,7 +28,7 @@ Lepton& Lepton::operator=(const Lepton& other)
 }
 
 // Move assignment operator
-Lepton& Lepton::operator=(Lepton&& other)
+Photon& Photon::operator=(Photon&& other)
 {
     if (this != &other) 
     {
@@ -37,3 +36,4 @@ Lepton& Lepton::operator=(Lepton&& other)
     }
     return *this;
 }
+

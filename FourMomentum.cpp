@@ -225,11 +225,58 @@ FourMomentum FourMomentum::operator-(const FourMomentum& other) const
     );
 }
 
-// Dot product function
-double dot_product(const FourMomentum& four_momentum1, const FourMomentum& four_momentum2)
+// Overloaded multiplication operator
+double FourMomentum::operator*(const FourMomentum& other) const
 {
-    return four_momentum1.four_momentum[0] * four_momentum2.four_momentum[0] -
-           four_momentum1.four_momentum[1] * four_momentum2.four_momentum[1] -
-           four_momentum1.four_momentum[2] * four_momentum2.four_momentum[2] -
-           four_momentum1.four_momentum[3] * four_momentum2.four_momentum[3];
+    return  four_momentum[0] * other.four_momentum[0] -
+            four_momentum[1] * other.four_momentum[1] -
+            four_momentum[2] * other.four_momentum[2] -
+            four_momentum[3] * other.four_momentum[3];
+}
+
+// Reconstruct function
+FourMomentum reconstruct(double E, double px, double py, double pz)
+{
+    // Ensure E is finite and real
+    if (std::isnan(E) || std::isinf(E))
+    {
+        try 
+        {
+            throw std::invalid_argument("FourMomentum: Energy must be a finite, real number.");
+        } 
+        catch (const std::invalid_argument& e) 
+        {
+            std::cout << e.what() << std::endl;
+            std::cout << "Setting energy to zero." << std::endl;
+            E = 0.0;
+        }
+    }
+    // Ensure px, py, pz are finite and real
+    if (std::isnan(px) || std::isinf(px) || std::isnan(py) || std::isinf(py) || std::isnan(pz) || std::isinf(pz))
+    {
+        try 
+        {
+            throw std::invalid_argument("FourMomentum: Momentum components must be finite, real numbers.");
+        } 
+        catch (const std::invalid_argument& e) 
+        {
+            std::cout << e.what() << std::endl;
+            std::cout << "Setting momentum components to zero." << std::endl;
+            px = py = pz = 0.0;
+        }
+    }
+    double p_sqrd = px * px + py * py + pz * pz;
+    double mass_sqr = E * E - p_sqrd;
+    // construct the FourMomentum object
+    if (mass_sqr > 0.0)
+    {
+        FourMomentum reconstructed_momentum(sqrt(mass_sqr), px, py, pz);
+        return reconstructed_momentum;
+    }
+    else
+    {
+        FourMomentum reconstructed_momentum(0.0, px, py, pz);
+        return reconstructed_momentum;
+    }
+    
 }

@@ -4,7 +4,7 @@
 Particle::Particle()
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Particle);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Particle);
     // Create a new FourMomentum object with random momentum
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
 }
@@ -13,7 +13,7 @@ Particle::Particle()
 Particle::Particle(double px, double py, double pz)
 {
     // Get particle properties
-    ParticleInfo::ParticleProperties properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Particle);
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Particle);
     // Create a new FourMomentum object
     four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
 }
