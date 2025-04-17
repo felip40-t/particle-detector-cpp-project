@@ -37,7 +37,7 @@ Each sub-detector attempts to detect the particle and measure its properties (en
 ## Class Hierarchy
 
 ### Particles
-
+```
 Particle
 ├─ Lepton
 │  ├─ Electron
@@ -49,16 +49,16 @@ Particle
 │  └─ Neutron
 └─ Boson
    └─ Photon
-
+```
 
 ### Sub-detectors
-
+```
 SubDetector
 ├─ Tracker
 ├─ EMCalorimeter
 ├─ HadronCalorimeter
 └─ MuonChamber
-
+```
 ## Notes
 
 - Detector measurements are subject to **efficiency**, **resolution**, and **uncertainty**.
