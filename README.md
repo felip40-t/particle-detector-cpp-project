@@ -39,24 +39,25 @@ Each sub-detector attempts to detect the particle and measure its properties (en
 ### Particles
 
 Particle
-├── Lepton
-│   ├── Electron
-│   ├── Positron
-│   ├── Muon
-│   └── Antimuon
-├── Hadron
-│   ├── Proton
-│   └── Neutron
-└── Boson
-    └── Photon
+├─ Lepton
+│  ├─ Electron
+│  ├─ Positron
+│  ├─ Muon
+│  └─ Antimuon
+├─ Hadron
+│  ├─ Proton
+│  └─ Neutron
+└─ Boson
+   └─ Photon
+
 
 ### Sub-detectors
 
 SubDetector
-├── Tracker
-├── EMCalorimeter
-├── HadronCalorimeter
-└── MuonChamber
+├─ Tracker
+├─ EMCalorimeter
+├─ HadronCalorimeter
+└─ MuonChamber
 
 ## Notes
 
