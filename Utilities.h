@@ -38,4 +38,9 @@ namespace utils {
     inline auto momentum_squared = [](double px, double py, double pz) -> double {
         return px * px + py * py + pz * pz;
     };
+
+    // Lambda function to round to the nearest resolution
+    inline auto roundToResolution = [](double value, double resolution) -> double {
+        return std::round(value / resolution) * resolution;
+    };
 }

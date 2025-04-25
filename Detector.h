@@ -30,11 +30,14 @@ class Detector
         void remove_subdetector();
 
         // Clear all sub-detectors
-        void clear_subdetectors() { subdetectors.clear(); }
+        void clear_subdetectors();
 
         // Print function for the detector
         void print() const;
 
         // Detect function for the detector
         void detect(const Particle& particle) const;
+
+        // Get sub-detectors
+        const std::vector<std::unique_ptr<SubDetector>>& get_subdetectors() const { return subdetectors; }
 };

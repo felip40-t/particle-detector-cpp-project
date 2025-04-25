@@ -21,11 +21,10 @@ EMCalorimeter::EMCalorimeter(double efficiency, double resolution, double uncert
 
 
 // Detect function
-void EMCalorimeter::detect(const Particle& particle)
+void EMCalorimeter::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
     // Simulate detection
     // Check if particle is Electron/Positron or Photon
-    measurement = SubDetectorInfo::Measurement(); // Reset measurement
     if (dynamic_cast<const Electron*>(&particle) || dynamic_cast<const Photon*>(&particle))
     {
         // Simulate detection with efficiency
@@ -40,7 +39,7 @@ void EMCalorimeter::detect(const Particle& particle)
             // Simulate the smearing of energy
             std::normal_distribution<double> energy_distribution(0.0, uncertainty);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
-            measurement.energy = roundToResolution(smeared_energy, resolution);
+            measurement.energy = utils::roundToResolution(smeared_energy, resolution);
         }
     }
 }

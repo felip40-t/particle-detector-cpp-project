@@ -29,5 +29,5 @@ class EMCalorimeter : public SubDetector
         EMCalorimeter& operator=(EMCalorimeter&& other) = default;
 
         // Detect function
-        void detect(const Particle& particle) override;
+        void detect(const Particle& particle, SubDetectorInfo::Measurement& measurement) override;
 };

@@ -20,11 +20,10 @@ MuonChamber::MuonChamber(double efficiency, double resolution, double uncertaint
 
 
 // Detect function
-void MuonChamber::detect(const Particle& particle)
+void MuonChamber::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
     // Simulate detection
     // Check if particle is Muon
-    measurement = SubDetectorInfo::Measurement(); // Reset measurement
     if (dynamic_cast<const Muon*>(&particle))
     {
         // Simulate detection with efficiency
@@ -38,16 +37,13 @@ void MuonChamber::detect(const Particle& particle)
             measurement.charge = particle.get_properties().get_charge();
             std::cout << "Particle detected in " << name << std::endl;
             // Simulate resolution smearing effect for each component of the particle's momentum
-            std::cout << "Momentum vector: [ ";
             for (int i = 1; i <= 3; ++i)
             {
                 // generate normal distribution with mean = 0 and stddev = uncertainty
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                measurement.momentum[i - 1] = roundToResolution(smeared_value, resolution); // Store the smeared momentum value
-                std::cout << measurement.momentum[i - 1] << ", ";
+                measurement.momentum[i - 1] = utils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
             }
-            std::cout << " ]\n";
         }
     }
 }

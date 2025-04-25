@@ -39,5 +39,6 @@ class Tracker : public SubDetector
         void print() const override;
 
         // Detect function
-        void detect(const Particle& particle) override;
+        void detect(const Particle& particle, SubDetectorInfo::Measurement& m) override;
+
 };

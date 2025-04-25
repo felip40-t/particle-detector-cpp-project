@@ -14,6 +14,7 @@ Each sub-detector attempts to detect the particle and measure its properties (en
 - Simulated sub-detectors with efficiency, resolution, and uncertainty models.
 - Measurement aggregation and invariant mass calculation.
 - Per-particle measurement logging by each detector component.
+- User Interface to build a detector object and add particles to a list to be measured.
 
 ## Sub-Detectors
 

@@ -86,12 +86,18 @@ void Detector::remove_subdetector(size_t i)
 // Get user to remove subdetector
 void Detector::remove_subdetector() 
 {
+    if (subdetectors.empty()) {
+        std::cout << "No sub-detectors to remove.\n";
+        return;
+    }
+
     std::cout << "==================================\n";
     std::cout << "Remove a sub-detector\n";
     std::cout << "==================================\n";
     std::cout << "Enter index of sub-detector to remove: ";
     std::string index_input;
     std::cin >> index_input;
+
     if (check_string_to_int(index_input)) 
     {
         size_t index = std::stoi(index_input);
@@ -103,9 +109,27 @@ void Detector::remove_subdetector()
     }
 }
 
+// Clear all sub-detectors
+void Detector::clear_subdetectors() 
+{
+    if (subdetectors.empty()) 
+    {
+        std::cout << "No sub-detectors to clear.\n";
+        return;
+    }
+    subdetectors.clear();
+    std::cout << "All sub-detectors cleared.\n";
+}
+
+
 // Print function for the detector
 void Detector::print() const 
 {
+    if (subdetectors.empty()) 
+    {
+        std::cout << "No sub-detectors in the detector." << std::endl;
+        return;
+    }
     std::cout << "Detector contains the following sub-detectors:" << std::endl;
     for (const auto& subdetector : subdetectors) 
     {
@@ -118,55 +142,24 @@ void Detector::print() const
 // Detect function for the detector
 void Detector::detect(const Particle& particle) const 
 {
-    std::cout << "===========================================\n";
+    std::cout << "--------------------------------------------\n";
     std::cout << "Detecting...\n";
-    std::cout << "===========================================\n";
-    SubDetectorInfo::Measurement measurement; // Create a measurement object
+    std::cout << "--------------------------------------------\n";
+    // Create a measurement object for the particle's measurements
+    SubDetectorInfo::Measurement measurement; 
     for (const auto& subdetector : subdetectors) 
     {
         // Detect the particle in each sub-detector
-        subdetector->detect(particle);
-        // If detected, update the measurement
-        if (subdetector->get_measurement().track) 
-        {
-            measurement.track = true;
-            measurement.momentum = subdetector->get_measurement().momentum;
-            measurement.charge = subdetector->get_measurement().charge;
-        }
-        if (subdetector->get_measurement().em_calorimeter) 
-        {
-            measurement.em_calorimeter = true;
-            measurement.energy = subdetector->get_measurement().energy;
-        }
-        if (subdetector->get_measurement().hadron_calorimeter) 
-        {
-            measurement.hadron_calorimeter = true;
-            measurement.energy = subdetector->get_measurement().energy;
-        }
-        if (subdetector->get_measurement().muon_chamber) 
-        {
-            // Since muon chamber works with tracker, calculate average momentum
-
-            measurement.muon_chamber = true;
-            std::array<double, 3> temp_momentum = subdetector->get_measurement().momentum;
-            for (int i = 0; i < 3; ++i) 
-            {
-                measurement.momentum[i] += temp_momentum[i];
-            }
-            // Average the momentum
-            for (int i = 0; i < 3; ++i) 
-            {
-                measurement.momentum[i] /= 2.0;
-            }
-            
-        }
+        subdetector->detect(particle, measurement);
     }
-    std::cout << std::endl;
+
     // Reconstruct 4-momentum and identify particle
+    // If both EM calorimeter and tracker detect a particle, then it is an electron or positron
     if (measurement.em_calorimeter && measurement.track)
     {
+        // Reconstruct 4-momentum using energy and momentum 
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
-        
+        // Check charge to see if it is an electron or positron
         if (measurement.charge < 0)
         {
             std::cout << "Electron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
@@ -180,37 +173,45 @@ void Detector::detect(const Particle& particle) const
         std::cout << "True four momentum:\n";
         particle.get_four_momentum().print();
     }
+    // If both hadron calorimeter and tracker detect a particle, then it is a charged hadron
     else if (measurement.hadron_calorimeter && measurement.track)
     {
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
+        // Check charge to see if it is a positive or negative hadron
         if (measurement.charge > 0)
         {
-            std::cout << "Positive charge Hadron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
+            std::cout << "Positive electric charge Hadron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
         }
         else if (measurement.charge < 0)
         {
-            std::cout << "Negative charge Hadron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
+            std::cout << "Negative electric charge Hadron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
         }
         std::cout << "Four momentum measured:\n";
         four_momentum.print();
         std::cout << "True four momentum:\n";
         particle.get_four_momentum().print();
     }
+    // If only EM calorimeter detects a particle, then it is a photon
     else if (measurement.em_calorimeter && !measurement.track)
     {
         std::cout << "Photon detected with energy: " << measurement.energy << " MeV\n";
         std::cout << "True four momentum:\n";
         particle.get_four_momentum().print();
     }
+    // If only hadron calorimeter detects a particle, then it is a neutral hadron
     else if (measurement.hadron_calorimeter && !measurement.track)
     {
         std::cout << "Neutral hadron detected with energy: " << measurement.energy << " MeV\n";
         std::cout << "True four momentum:\n";
         particle.get_four_momentum().print();
     }
+    // If only muon chamber detects a particle, then it is a muon or antimuon
     else if (measurement.muon_chamber)
     {
+        // Reconstruct 4-momentum using mass and momentum,
+        // since muon mass is known
         FourMomentum four_momentum(105.7, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
+        // Check charge to see if it is a muon or antimuon
         if (measurement.charge < 0)
         {
             std::cout << "Muon detected with energy: " << four_momentum.get_component(0) << "\n";
@@ -228,5 +229,4 @@ void Detector::detect(const Particle& particle) const
     {
         std::cout << "Not enough information to reconstruct 4-momentum." << std::endl;
     }
-    std::cout << "-------------------------------------------\n";
 }

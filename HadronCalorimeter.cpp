@@ -19,11 +19,10 @@ HadronCalorimeter::HadronCalorimeter(double efficiency, double resolution, doubl
 }
 
 
-void HadronCalorimeter::detect(const Particle& particle)
+void HadronCalorimeter::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
     // Simulate detection
     // Check if particle is Hadron
-    measurement = SubDetectorInfo::Measurement(); // Reset measurement
     if (dynamic_cast<const Hadron*>(&particle))
     {
         // Simulate detection with efficiency
@@ -38,7 +37,7 @@ void HadronCalorimeter::detect(const Particle& particle)
             // Simulate the smearing of energy
             std::normal_distribution<double> energy_distribution(0.0, uncertainty);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
-            measurement.energy = roundToResolution(smeared_energy, resolution);
+            measurement.energy = utils::roundToResolution(smeared_energy, resolution);
         }
     }
 }

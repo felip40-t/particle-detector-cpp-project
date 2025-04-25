@@ -28,5 +28,5 @@ class HadronCalorimeter : public SubDetector
         HadronCalorimeter& operator=(HadronCalorimeter&& other) = default;
 
         // Detect function
-        void detect(const Particle& particle) override;
+        void detect(const Particle& particle, SubDetectorInfo::Measurement& measurement) override;
 };

@@ -2,12 +2,12 @@
 
 #include "Particle.h"
 #include "SubdetectorInfo.h"
+#include "Utilities.h"
 
 class SubDetector
 {
     protected:
         SubDetectorInfo::SubDetectorType type; // Sub-detector type
-        SubDetectorInfo::Measurement measurement; // Measurement data
         string name; // Sub-detector name
         double efficiency; // Efficiency of the sub-detector
         double resolution; // Resolution of the sub-detector
@@ -41,16 +41,12 @@ class SubDetector
         double get_efficiency() const { return efficiency; }
         double get_resolution() const { return resolution; }
         double get_uncertainty() const { return uncertainty; }
-        SubDetectorInfo::Measurement get_measurement() const { return measurement; }
 
         // Virtual print function
         virtual void print() const;
 
-        // Virtual detector function
-        virtual void detect(const Particle& particle) = 0;
+        // Virtual detector function - updates measurement
+        virtual void detect(const Particle& particle, SubDetectorInfo::Measurement& m) = 0;
 
 };
-
-// Helper function to round a value to the nearest resolution
-double roundToResolution(double value, double resolution);
 

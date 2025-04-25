@@ -36,7 +36,7 @@ int main() {
             continue;
         }
 
-        // Show menu and get user choice
+        // Get user choice
         int option = std::stoi(choice);
         switch (option) 
         {
@@ -55,9 +55,7 @@ int main() {
             case 3:
             {
                 // Clear all sub-detectors
-                std::cout << "Clearing all sub-detectors...\n";
                 CMS_detector.clear_subdetectors();
-                std::cout << "All sub-detectors cleared.\n";
                 break;
             }
             case 4:
@@ -89,6 +87,11 @@ int main() {
             case 6:
             {
                 // Remove a particle
+                if (particles.empty()) 
+                {
+                    std::cout << "No particles to remove.\n";
+                    break;
+                }
                 std::cout << "================================\n";
                 std::cout << "Remove a particle\n";
                 std::cout << "================================\n";
@@ -125,14 +128,14 @@ int main() {
             case 8:
             {
                 // Print particles' information
-                std::cout << "==================================\n";
-                std::cout << "Particles' information:\n";
-                std::cout << "==================================\n";
                 if (particles.empty()) 
                 {
                     std::cout << "No particles available.\n";
                     break;
                 }
+                std::cout << "==================================\n";
+                std::cout << "Particles' information:\n";
+                std::cout << "==================================\n";
                 for (const auto& particle : particles) 
                 {
                     std::cout << "-------------------------------------------\n";
@@ -144,6 +147,19 @@ int main() {
             case 9:
             {
                 // Detect particles
+                if (CMS_detector.get_subdetectors().empty()) 
+                {
+                    std::cout << "No sub-detectors available for detection.\n";
+                    break;
+                }
+                if (particles.empty()) 
+                {
+                    std::cout << "No particles available for detection.\n";
+                    break;
+                }
+                std::cout << "==================================\n";
+                std::cout << "Detect particles\n";
+                std::cout << "==================================\n";
                 for (const auto& particle : particles) 
                 {
                     CMS_detector.detect(*particle);

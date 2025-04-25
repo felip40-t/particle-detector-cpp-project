@@ -109,7 +109,3 @@ void SubDetector::print() const
     std::cout << "Uncertainty: " << uncertainty << std::endl;
 }
 
-// Helper function to round a value to the nearest resolution
-double roundToResolution(double value, double resolution) {
-    return std::round(value / resolution) * resolution;
-}

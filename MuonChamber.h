@@ -28,5 +28,5 @@ class MuonChamber : public SubDetector
         MuonChamber& operator=(MuonChamber&& other) = default;
 
         // Detect function
-        void detect(const Particle& particle) override;
+        void detect(const Particle& particle, SubDetectorInfo::Measurement& m) override;
 };

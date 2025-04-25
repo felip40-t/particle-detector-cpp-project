@@ -87,10 +87,9 @@ void Tracker::print() const
     std::cout << "Material: " << material << std::endl;
 }
 
-// Detect function - prints momentum vector if charge is detected
-void Tracker::detect(const Particle& particle)
+// Detect function 
+void Tracker::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
-    measurement = SubDetectorInfo::Measurement(); // Reset measurement for each detection
     // Simulate detection
     // Check if particle is charged
     if (particle.get_properties().get_charge() != 0)
@@ -107,23 +106,13 @@ void Tracker::detect(const Particle& particle)
             
             std::cout << "Particle detected in " << name << std::endl;
             // Simulate resolution smearing effect for each component of the particle's momentum
-            std::cout << "Momentum vector: [";
             for (int i = 1; i <= 3; ++i)
             {   
-                if (dynamic_cast<const Muon*>(&particle))
-                {
-                    // Increase uncertainty and resolution for muons
-                    // since they are less precise in the tracker
-                    uncertainty *= 10.0; 
-                    resolution *= 10.0; 
-                }
                 // generate normal distribution with mean = 0 and stddev = uncertainty
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                measurement.momentum[i - 1] = roundToResolution(smeared_value, resolution); // Store the smeared momentum value
-                std::cout << measurement.momentum[i - 1] << ", "; // Print the smeared momentum value
+                measurement.momentum[i - 1] = utils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
             }
-            std::cout << "]" << std::endl;
         }
     }
 }
