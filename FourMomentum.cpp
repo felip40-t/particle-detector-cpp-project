@@ -1,4 +1,10 @@
 #include "FourMomentum.h"
+#include "Utilities.h"
+
+// Private constructor for use in operator overloading and reconstruction
+FourMomentum::FourMomentum(double E, double px, double py, double pz, RawTag)
+    // Initialize four_momentum with the given values
+    : four_momentum{E, px, py, pz} {};
 
 
 // Default constructor: give random momentum and make photon-like
@@ -7,72 +13,35 @@ FourMomentum::FourMomentum(double rest_mass)
     // Set maximum energy scale to randomise to
     const double ENERGY_SCALE {1000.0}; // MeV
     // Set up random number generator
-    std::random_device rand_dev;
-    std::mt19937 generator(rand_dev());
+    static std::random_device rand_dev;
+    static std::mt19937 generator(rand_dev());
     std::uniform_real_distribution<double> distribution(-ENERGY_SCALE, ENERGY_SCALE);
-
-    double momentum_sqrd{};
-
     // Set momenta
     for (int i {0}; i < 3 ; i++)
     {
         four_momentum[i+1] = distribution(generator);
-        momentum_sqrd += four_momentum[i+1] * four_momentum[i+1];
     }
     // Set energy
-    four_momentum[0] = sqrt(momentum_sqrd + rest_mass * rest_mass);
+    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass * rest_mass);
 }
-
-// Destructor
-FourMomentum::~FourMomentum(){}
 
 // Parameterized constructor
 FourMomentum::FourMomentum(double rest_mass, double px, double py, double pz)
 {
-    // Calculate square of the momentum
-    double momentum_sqrd = px * px + py * py + pz * pz;
     // Ensure rest mass is non-negative, real and finite
-    if (std::isnan(rest_mass) || std::isinf(rest_mass))
+    if (std::isnan(rest_mass) || std::isinf(rest_mass) || rest_mass < 0.0)
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: Rest mass must be a finite, real number.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting rest mass to zero." << std::endl;
-            rest_mass = 0.0;
-        }
-    }
-    else if (rest_mass < 0)
-    {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: Rest mass must be non-negative.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting rest mass to zero." << std::endl;
-            rest_mass = 0.0;
-        }
+        std::cerr << "FourMomentum: Rest mass must be a positive, finite, real number." << std::endl;
+        std::cerr << "Setting rest mass to zero." << std::endl;
+        rest_mass = 0.0;
     }
     else if (std::isnan(px) || std::isinf(px) || std::isnan(py) || std::isinf(py) || std::isnan(pz) || std::isinf(pz))
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: Momentum components must be finite, real numbers.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting momentum components to zero." << std::endl;
-            px = py = pz = 0.0;
-        }
+        std::cerr << "FourMomentum: Momentum components must be finite, real numbers." << std::endl;
+        std::cerr << "Setting momentum components to zero." << std::endl;
+        px = py = pz = 0.0;
     }
-    
-    four_momentum[0] = sqrt(momentum_sqrd + rest_mass * rest_mass);
+    four_momentum[0] = sqrt(utils::momentum_squared(px, py, pz) + rest_mass * rest_mass);
     four_momentum[1] = px;
     four_momentum[2] = py;
     four_momentum[3] = pz;
@@ -115,15 +84,8 @@ double FourMomentum::get_component(int index) const
 {
     if (index < 0 || index > 3)
     {
-        try 
-        {
-            throw std::out_of_range("FourMomentum: Index out of range. Must be between 0 and 3.");
-        } 
-        catch (const std::out_of_range& e) 
-        {
-            std::cout << e.what() << std::endl;
-            return 0.0; // Return zero for out-of-range index
-        }
+        std::cerr << "FourMomentum: Index out of bounds. Returning 0." << std::endl;
+        return 0.0;
     }
     return four_momentum[index];
 }
@@ -131,77 +93,59 @@ double FourMomentum::get_component(int index) const
 // Setters for momentum components
 void FourMomentum::set_px(double px) 
 {
-    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
+    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure px is finite and real
     if (std::isnan(px) || std::isinf(px))
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: px must be a finite, real number.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting px to zero." << std::endl;
-            four_momentum[1] = 0.0;
-            return;
-        }
+        std::cerr << "FourMomentum: px must be a finite, real number." << std::endl;
+        std::cerr << "Leaving px unchanged." << std::endl;
+        return;
     }
     four_momentum[1] = px;
     // Calculate the energy based on the new momentum
-    double momentum_sqrd = four_momentum[1] * four_momentum[1] + four_momentum[2] * four_momentum[2] + four_momentum[3] * four_momentum[3]; 
-    four_momentum[0] = sqrt(momentum_sqrd + rest_mass_sqrd);
+    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
 void FourMomentum::set_py(double py) 
 {
-    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
+    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure py is finite and real
     if (std::isnan(py) || std::isinf(py))
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: py must be a finite, real number.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting py to zero." << std::endl;
-            four_momentum[2] = 0.0;
-            return;
-        }
+        std::cerr << "FourMomentum: py must be a finite, real number." << std::endl;
+        std::cerr << "Leaving py unchanged." << std::endl;
+        return;
     }
     four_momentum[2] = py;
     // Calculate the energy based on the new momentum
-    double momentum_sqrd = four_momentum[1] * four_momentum[1] + four_momentum[2] * four_momentum[2] + four_momentum[3] * four_momentum[3]; 
-    four_momentum[0] = sqrt(momentum_sqrd + rest_mass_sqrd);
+    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
 void FourMomentum::set_pz(double pz) 
 {
-    double rest_mass_sqrd = four_momentum[0] * four_momentum[0] - four_momentum[1] * four_momentum[1] - four_momentum[2] * four_momentum[2] - four_momentum[3] * four_momentum[3];
+    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure pz is finite and real
     if (std::isnan(pz) || std::isinf(pz))
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: pz must be a finite, real number.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting pz to zero." << std::endl;
-            four_momentum[3] = 0.0;
-            return;
-        }
+        std::cerr << "FourMomentum: pz must be a finite, real number." << std::endl;
+        std::cerr << "Leaving pz unchanged." << std::endl;
+        return;
     }
     four_momentum[3] = pz;
-    // Calculate the energy based on the new momentum
-    double momentum_sqrd = four_momentum[1] * four_momentum[1] + four_momentum[2] * four_momentum[2] + four_momentum[3] * four_momentum[3]; 
-    four_momentum[0] = sqrt(momentum_sqrd + rest_mass_sqrd);
+    // Calculate the energy based on the new momentum 
+    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
-
+// Print function
+void FourMomentum::print() const
+{
+    std::cout << "[ ";
+    for (int i = 0; i < 4; ++i)
+    {
+        std::cout << four_momentum[i] << " ";
+    }
+    std::cout << "]" << std::endl;
+}
 
 // Overloaded sum operator
 FourMomentum FourMomentum::operator+(const FourMomentum& other) const
@@ -210,7 +154,8 @@ FourMomentum FourMomentum::operator+(const FourMomentum& other) const
         four_momentum[0] + other.four_momentum[0],
         four_momentum[1] + other.four_momentum[1],
         four_momentum[2] + other.four_momentum[2],
-        four_momentum[3] + other.four_momentum[3]
+        four_momentum[3] + other.four_momentum[3], 
+        RawTag{} // Use the private constructor
     );
 }
 
@@ -221,7 +166,8 @@ FourMomentum FourMomentum::operator-(const FourMomentum& other) const
         four_momentum[0] - other.four_momentum[0],
         four_momentum[1] - other.four_momentum[1],
         four_momentum[2] - other.four_momentum[2],
-        four_momentum[3] - other.four_momentum[3]
+        four_momentum[3] - other.four_momentum[3],
+        RawTag{} // Use the private constructor
     );
 }
 
@@ -238,45 +184,24 @@ double FourMomentum::operator*(const FourMomentum& other) const
 FourMomentum reconstruct(double E, double px, double py, double pz)
 {
     // Ensure E is finite and real
-    if (std::isnan(E) || std::isinf(E))
+    if (std::isnan(E) || std::isinf(E) || E < 0.0)
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: Energy must be a finite, real number.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting energy to zero." << std::endl;
-            E = 0.0;
-        }
+        std::cerr << "FourMomentum: Energy must be a positive, finite, real number." << std::endl;
+        std::cerr << "Setting energy to zero." << std::endl;
+        E = 0.0;
     }
     // Ensure px, py, pz are finite and real
     if (std::isnan(px) || std::isinf(px) || std::isnan(py) || std::isinf(py) || std::isnan(pz) || std::isinf(pz))
     {
-        try 
-        {
-            throw std::invalid_argument("FourMomentum: Momentum components must be finite, real numbers.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting momentum components to zero." << std::endl;
-            px = py = pz = 0.0;
-        }
+        std::cerr << "FourMomentum: Momentum components must be finite, real numbers." << std::endl;
+        std::cerr << "Setting momentum components to zero." << std::endl;
+        px = py = pz = 0.0;
     }
-    double p_sqrd = px * px + py * py + pz * pz;
-    double mass_sqr = E * E - p_sqrd;
-    // construct the FourMomentum object
-    if (mass_sqr > 0.0)
-    {
-        FourMomentum reconstructed_momentum(sqrt(mass_sqr), px, py, pz);
-        return reconstructed_momentum;
-    }
-    else
-    {
-        FourMomentum reconstructed_momentum(0.0, px, py, pz);
-        return reconstructed_momentum;
-    }
-    
+    return FourMomentum(
+        E,
+        px,
+        py,
+        pz,
+        RawTag{} // Use the private constructor
+    );
 }

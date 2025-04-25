@@ -9,10 +9,19 @@
 #include <stdexcept>
 #include <iostream>
 
+// Raw tag for FourMomentum private constructor which 
+// allows for reconstruction of FourMomentum from E, px, py, pz
+// and used in operator overloading
+struct RawTag {};
+
 class FourMomentum
 {
     private:
-        std::array<double, 4> four_momentum; // 4-momentum array with fixed size
+        // 4-momentum array
+        std::array<double, 4> four_momentum;
+
+        // Private constructor for use in operator overloading and reconstruction
+        FourMomentum(double E, double px, double py, double pz, RawTag);
 
     public:
         // Default constructor 
@@ -21,8 +30,8 @@ class FourMomentum
         // Constructor for random momentum
         FourMomentum(double rest_mass);
 
-        // Destructor
-        ~FourMomentum();
+        // Default destructor
+        ~FourMomentum() = default;
 
         // Parameterized constructor
         FourMomentum(double rest_mass, double px, double py, double pz);
@@ -47,6 +56,9 @@ class FourMomentum
         void set_py(double py);
         void set_pz(double pz);
 
+        // Print function
+        void print() const;
+
         // Overloaded sum operator
         FourMomentum operator+(const FourMomentum& other) const;
 
@@ -56,7 +68,8 @@ class FourMomentum
         // Overloaded multiplication operator (scalar product)
         double operator*(const FourMomentum& other) const;
 
+        // Reconstruct function
+        friend FourMomentum reconstruct(double E, double px, double py, double pz);
 };
 
-// Reconstruct function
 FourMomentum reconstruct(double E, double px, double py, double pz);

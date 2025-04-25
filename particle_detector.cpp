@@ -1,104 +1,159 @@
-// Date: 15/04/2025
-/*
-Title: Particle Detector Simulation
-Student ID: 10826579
-
-Abstract:
-This program simulates a particle detector, by adding sub-detectors to a main detector object.
-It creates a vector of particles, which can be chosen from a list of Standard Model particles.
-The detector then 'detects' them, by using each sub-detector to check if the particle is detected.
-If the sub-detector is suited to detect the specific particle, then it can measure it's energy or momentum.
-Tracking sub-detectors can also measure the sign of the particle's charge.
-The detectors then combine the measurements made into a single Measurement object, and if there is sufficient
-information then it can reconstruct the particle's four-momentum, and hence calculate the invariant mass of 
-the particle.
-
-The sub-detectors are also modeled to be imperfect; they have a certain efficiency, as well as a resolution
-and uncertainty on each measurement of the energy/momentum. 
-After each particle is passed through the detector, each sub-detector will print out the information it has measured.
-The invariant mass of the particle is then calculated if enough information is available.
-
-The list of sub-detectors is as follows:
-Tracker: A tracking detector that measures the momentum of charged particles.
-EMCalorimeter: An electromagnetic calorimeter that measures the energy of photons and electrons/positrons.
-HadronCalorimeter: A hadronic calorimeter that measures the energy of hadrons.
-MuonChamber: A muon chamber that measures the momentum of muons/antimuons.
-
-The list of particles is as follows:
-Electron: A negatively charged lepton with a mass of 0.511 MeV/c^2.
-Positron: A positively charged lepton with a mass of 0.511 MeV/c^2.
-Photon: A neutral boson with a mass of 0 MeV/c^2.
-Muon: A negatively charged lepton with a mass of 105.7 MeV/c^2.
-Antimuon: A positively charged lepton with a mass of 105.7 MeV/c^2.
-Proton: A positively charged Hadron with a mass of 938.3 MeV/c^2.
-Neutron: A neutral Hadron with a mass of 939.6 MeV/c^2.
-
-Class hierarchy is as follows:
-Particle -> Lepton -> Electron -> Positron
-Particle -> Lepton -> Muon -> Antimuon
-Particle -> Hadron -> Proton
-Particle -> Hadron -> Neutron
-Particle -> Boson -> Photon
-
-SubDetector -> Tracker
-SubDetector -> EMCalorimeter
-SubDetector -> HadronCalorimeter
-SubDetector -> MuonChamber
-
-
-*/
-
-
-
-
-
+// Particle Detector Simulation
 #include <iostream>
 #include <iomanip>
 
 #include "Detector.h"
-#include "Tracker.h"
-#include "EMCalorimeter.h"
-#include "HadronCalorimeter.h"
-#include "MuonChamber.h"
 
 #include "Electron.h"
 #include "Muon.h"
 #include "Photon.h"
 #include "Hadron.h"
-
+#include "Utilities.h"
 
 int main() {
 
     // Create a detector object
-    Detector CMS_detector("CMS style detector");
-    // Create a sub-detector object
-    // And add the sub-detector to the detector
-    CMS_detector.add_subdetector(std::make_unique<Tracker>(0.99, 0.0001, 0.0001, 5, "Silicon"));
-    CMS_detector.add_subdetector(std::make_unique<EMCalorimeter>(0.99, 0.0001, 0.0001));
-    CMS_detector.add_subdetector(std::make_unique<HadronCalorimeter>(0.99, 1, 0.5));
-    CMS_detector.add_subdetector(std::make_unique<MuonChamber>(0.99, 0.2, 0.1));
+    Detector CMS_detector;
 
-
-    CMS_detector.print(); // Print the detector information
-
-    // Create a vector of particles
+    // Create particles vector
     std::vector<std::unique_ptr<Particle>> particles;
-    particles.push_back(std::make_unique<Electron>());
-    particles.push_back(std::make_unique<Positron>());
-    particles.push_back(std::make_unique<Photon>());
-    particles.push_back(std::make_unique<Proton>());
-    particles.push_back(std::make_unique<Neutron>());
-    particles.push_back(std::make_unique<Muon>());
-    particles.push_back(std::make_unique<AntiMuon>());
 
-    // Loop through particles
-    for (const auto& particle : particles) 
+    while (true) 
     {
-        // particle->print_data();
-        // // Check invariant mass of particle
-        // double inv_mass {sqrt(particle->get_four_momentum() * particle->get_four_momentum())};
-        // std::cout << "Invariant mass of " << particle->get_properties().get_name() << ": " << inv_mass << " MeV/c^2\n";
-        CMS_detector.detect(*particle); 
+        std::string choice{};
+        show_menu();
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        if (check_string_to_int(choice)) 
+        {
+            int option = std::stoi(choice);
+            if (option == 0) 
+                break; 
+        } 
+        else 
+        {
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
+        // Show menu and get user choice
+        int option = std::stoi(choice);
+        switch (option) 
+        {
+            case 1:
+            {
+                // Add a sub-detector
+                CMS_detector.add_subdetector();
+                break;
+            }
+            case 2:
+            {
+                // Remove a sub-detector
+                CMS_detector.remove_subdetector();
+                break;
+            }
+            case 3:
+            {
+                // Clear all sub-detectors
+                std::cout << "Clearing all sub-detectors...\n";
+                CMS_detector.clear_subdetectors();
+                std::cout << "All sub-detectors cleared.\n";
+                break;
+            }
+            case 4:
+            {
+                // Print detector information
+                CMS_detector.print();
+                break;
+            }
+            case 5:
+            {
+                // Add a particle
+                particle_menu();
+                std::cout << "Please enter the number of your chosen particle: ";
+                std::string particle_choice;
+                std::cin >> particle_choice;
+                if (check_string_to_int(particle_choice))
+                    {
+                        int choice = std::stoi(particle_choice);
+                        for (int i = 1 ; i < 8 ; i++)
+                        {
+                            if (choice == i)
+                                particles.push_back(choose_particle(choice));
+                        }
+                        if (choice == 8)
+                            particles.push_back(choose_random_particle());
+                    }
+                break;
+            }
+            case 6:
+            {
+                // Remove a particle
+                std::cout << "================================\n";
+                std::cout << "Remove a particle\n";
+                std::cout << "================================\n";
+                std::cout << "Enter index of particle to remove: ";
+                std::string index_input;
+                std::cin >> index_input;
+                if (check_string_to_int(index_input)) 
+                {
+                    size_t index = std::stoi(index_input);
+                    if (index < particles.size()) 
+                    {
+                        particles.erase(particles.begin() + index);
+                        std::cout << "Particle removed successfully.\n";
+                    } 
+                    else 
+                    {
+                        std::cout << "Invalid index. No particle removed.\n";
+                    }
+                } 
+                else 
+                {
+                    std::cout << "Invalid input. Please enter a number.\n";
+                }
+                break;
+            }
+            case 7:
+            {
+                // Clear all particles
+                std::cout << "Clearing all particles...\n";
+                particles.clear();
+                std::cout << "All particles cleared.\n";
+                break;
+            }
+            case 8:
+            {
+                // Print particles' information
+                std::cout << "==================================\n";
+                std::cout << "Particles' information:\n";
+                std::cout << "==================================\n";
+                if (particles.empty()) 
+                {
+                    std::cout << "No particles available.\n";
+                    break;
+                }
+                for (const auto& particle : particles) 
+                {
+                    std::cout << "-------------------------------------------\n";
+                    particle->print_data();
+                    std::cout << "-------------------------------------------\n";
+                }
+                break;
+            }
+            case 9:
+            {
+                // Detect particles
+                for (const auto& particle : particles) 
+                {
+                    CMS_detector.detect(*particle);
+                }
+                std::cout << "Detection complete.\n";
+                break;
+            }
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
     }
 
     return 0;

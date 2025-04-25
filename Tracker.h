@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Subdetector.h"
+#include "Muon.h"
 
 class Tracker : public SubDetector
 {

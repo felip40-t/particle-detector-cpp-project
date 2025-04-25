@@ -34,11 +34,10 @@ void HadronCalorimeter::detect(const Particle& particle)
         if (random_value < efficiency)
         {
             measurement.hadron_calorimeter = true; // Set the measurement flag for HadronCalorimeter
-            std::cout << "Particle detected in " << name << " with Energy: \n";
+            std::cout << "Particle detected in " << name << std::endl;
             // Simulate the smearing of energy
             std::normal_distribution<double> energy_distribution(0.0, uncertainty);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
-            std::cout << roundToResolution(smeared_energy, resolution) << " MeV\n";
             measurement.energy = roundToResolution(smeared_energy, resolution);
         }
     }

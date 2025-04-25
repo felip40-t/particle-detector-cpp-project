@@ -1,25 +1,36 @@
 #pragma once
 
-#include "Subdetector.h"
+#include "Tracker.h"
+#include "EMCalorimeter.h"
+#include "HadronCalorimeter.h"
+#include "MuonChamber.h"
 
 class Detector
 {
     private:
-        std::vector<std::unique_ptr<SubDetector>> subdetectors; 
-        std::string name; // Name of the detector
+        std::vector<std::unique_ptr<SubDetector>> subdetectors;
 
     public:
-        // Default constructor
-        Detector() : name("Default Detector") {};
-
         // Parameterized constructor
-        Detector(const std::string& name) : name(name) {};
+        Detector() = default;
 
         // Destructor
         ~Detector() = default;
 
         // Add a sub-detector to the detector
         void add_subdetector(std::unique_ptr<SubDetector> subdetector);
+
+        // Get user to add subdetector
+        void add_subdetector();
+
+        // Remove a sub-detector from the detector at index i
+        void remove_subdetector(size_t i);
+
+        // Get user to remove subdetector
+        void remove_subdetector();
+
+        // Clear all sub-detectors
+        void clear_subdetectors() { subdetectors.clear(); }
 
         // Print function for the detector
         void print() const;

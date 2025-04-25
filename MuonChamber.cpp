@@ -36,19 +36,18 @@ void MuonChamber::detect(const Particle& particle)
         {
             measurement.muon_chamber = true; // Set the measurement flag for MuonChamber
             measurement.charge = particle.get_properties().get_charge();
-            std::cout << "Particle detected in " << name << " with momentum: \n";
-            std::cout << "[";
+            std::cout << "Particle detected in " << name << std::endl;
             // Simulate resolution smearing effect for each component of the particle's momentum
+            std::cout << "Momentum vector: [ ";
             for (int i = 1; i <= 3; ++i)
             {
                 // generate normal distribution with mean = 0 and stddev = uncertainty
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                std::cout << roundToResolution(smeared_value, resolution);
                 measurement.momentum[i - 1] = roundToResolution(smeared_value, resolution); // Store the smeared momentum value
-                if (i < 3) std::cout << ", ";
+                std::cout << measurement.momentum[i - 1] << ", ";
             }
-            std::cout << "]" << std::endl;
+            std::cout << " ]\n";
         }
     }
 }

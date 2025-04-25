@@ -99,8 +99,7 @@ SubDetector& SubDetector::operator=(SubDetector&& other)
     }
     return *this;
 }
-
-// Print function   
+ 
 // Print function
 void SubDetector::print() const
 {

@@ -87,7 +87,7 @@ void Tracker::print() const
     std::cout << "Material: " << material << std::endl;
 }
 
-// Detect function - prints momentum vector if detected
+// Detect function - prints momentum vector if charge is detected
 void Tracker::detect(const Particle& particle)
 {
     measurement = SubDetectorInfo::Measurement(); // Reset measurement for each detection
@@ -104,18 +104,24 @@ void Tracker::detect(const Particle& particle)
         {
             measurement.track = true; // Set the track flag to true
             measurement.charge = particle.get_properties().get_charge(); // Set the charge of the particle
-        
-            std::cout << "Particle detected in " << name << " with momentum: \n";
-            std::cout << "[";
+            
+            std::cout << "Particle detected in " << name << std::endl;
             // Simulate resolution smearing effect for each component of the particle's momentum
+            std::cout << "Momentum vector: [";
             for (int i = 1; i <= 3; ++i)
-            {
+            {   
+                if (dynamic_cast<const Muon*>(&particle))
+                {
+                    // Increase uncertainty and resolution for muons
+                    // since they are less precise in the tracker
+                    uncertainty *= 10.0; 
+                    resolution *= 10.0; 
+                }
                 // generate normal distribution with mean = 0 and stddev = uncertainty
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                std::cout << roundToResolution(smeared_value, resolution);
                 measurement.momentum[i - 1] = roundToResolution(smeared_value, resolution); // Store the smeared momentum value
-                if (i < 3) std::cout << ", ";
+                std::cout << measurement.momentum[i - 1] << ", "; // Print the smeared momentum value
             }
             std::cout << "]" << std::endl;
         }
