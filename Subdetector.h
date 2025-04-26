@@ -47,6 +47,5 @@ class SubDetector
 
         // Virtual detector function - updates measurement
         virtual void detect(const Particle& particle, SubDetectorInfo::Measurement& m) = 0;
-
 };
 

@@ -16,20 +16,19 @@ using std::string;
 #include "ParticleInfo.h"
 
 class Particle
-{
+{   
+    // Make constructors and assignment operators protected to prevent direct instantiation    
     protected:
-        ParticleInfo::ParticleProperties properties; // Particle properties
-        std::unique_ptr<FourMomentum> four_momentum; // Particle 4-momentum
-
-    public:
-        // Virtual destructor
-        virtual ~Particle() = default;
+        // Particle properties
+        ParticleInfo::ParticleProperties properties;
+        // Particle 4-momentum
+        std::unique_ptr<FourMomentum> four_momentum;
 
         // Default constructor
-        Particle();
+        Particle(ParticleInfo::ParticleType type);
 
         // Parameterized constructor
-        Particle(double px, double py, double pz);
+        Particle(ParticleInfo::ParticleType type, double px, double py, double pz);
 
         // Copy constructor
         Particle(const Particle& other);
@@ -42,6 +41,11 @@ class Particle
 
         // Move assignment operator
         Particle& operator=(Particle&& other);
+
+    public:
+
+        // Virtual destructor
+        virtual ~Particle() = default;
 
         // Virtual print function
         virtual void print_data() const;

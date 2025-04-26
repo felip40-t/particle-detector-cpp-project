@@ -10,16 +10,21 @@ namespace ParticleInfo
     // Enumerator class for particle types
     enum class ParticleType
     {
-        Particle,
-        Lepton,
-        Hadron,
-        Electron,
-        Positron,
-        Muon,
-        Antimuon,
-        Proton,
-        Neutron,
-        Photon,
+        NEUTRINO,
+        ANTI_NEUTRINO,
+        ELECTRON,
+        POSITRON,
+        MUON,
+        ANTI_MUON,
+        PROTON,
+        NEUTRON,
+        PION_PLUS,
+        PION_MINUS,
+        PION_0,
+        KAON_PLUS,
+        KAON_MINUS,
+        KAON_0,
+        PHOTON,
     };
 
     // Class for particle properties
@@ -59,7 +64,6 @@ namespace ParticleInfo
             double get_charge() const { return charge; }
             string get_name() const { return name; }
     };
-
 
     // Function to get particle properties by type using static map
     const ParticleProperties& get_particle_properties(ParticleType type);

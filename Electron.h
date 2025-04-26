@@ -5,50 +5,52 @@
 class Electron : public Lepton
 {
     public:
-        // Default constructor
-        Electron();
-
         // Destructor
         ~Electron() override = default;
 
+        // Default constructor
+        Electron() : Lepton(ParticleInfo::ParticleType::ELECTRON) {}
+
         // Parameterized constructor
-        Electron(double px, double py, double pz);
+        Electron(double px, double py, double pz)
+        : Lepton(ParticleInfo::ParticleType::ELECTRON, px, py, pz) {}
 
         // Copy constructor
-        Electron(const Electron& other) : Lepton(other) {}
+        Electron(const Electron& other) = default;
 
         // Move constructor
-        Electron(Electron&& other) : Lepton(std::move(other)) {}
+        Electron(Electron&& other) = default;
 
         // Copy assignment operator
-        Electron& operator=(const Electron& other);
+        Electron& operator=(const Electron& other) = default;
 
         // Move assignment operator
-        Electron& operator=(Electron&& other);
+        Electron& operator=(Electron&& other) = default;
 
 };
 
 class Positron : public Electron
 {
     public:
-        // Default constructor
-        Positron();
-
+        
         // Destructor
         ~Positron() override = default;
+
+        // Default constructor
+        Positron();
 
         // Parameterized constructor
         Positron(double px, double py, double pz);
 
         // Copy constructor
-        Positron(const Positron& other) : Electron(other) {}
+        Positron(const Positron& other) = default;
 
         // Move constructor
-        Positron(Positron&& other) : Electron(std::move(other)) {}
+        Positron(Positron&& other) = default;
 
         // Copy assignment operator
-        Positron& operator=(const Positron& other);
+        Positron& operator=(const Positron& other) = default;
 
         // Move assignment operator
-        Positron& operator=(Positron&& other);
+        Positron& operator=(Positron&& other) = default;
 };

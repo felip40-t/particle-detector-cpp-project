@@ -39,7 +39,7 @@ void EMCalorimeter::detect(const Particle& particle, SubDetectorInfo::Measuremen
             // Simulate the smearing of energy
             std::normal_distribution<double> energy_distribution(0.0, uncertainty);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
-            measurement.energy = utils::roundToResolution(smeared_energy, resolution);
+            measurement.energy = MathUtils::roundToResolution(smeared_energy, resolution);
         }
     }
 }

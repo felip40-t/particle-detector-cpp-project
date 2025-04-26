@@ -4,49 +4,51 @@
 class Muon : public Lepton
 {
     public:
-        // Default constructor
-        Muon();
 
         // Destructor
         ~Muon() override = default;
 
+        // Default constructor
+        Muon() : Lepton(ParticleInfo::ParticleType::MUON) {}
+
         // Parameterized constructor
-        Muon(double px, double py, double pz);
+        Muon(double px, double py, double pz)
+        : Lepton(ParticleInfo::ParticleType::MUON, px, py, pz) {}
 
         // Copy constructor
-        Muon(const Muon& other) : Lepton(other) {}
+        Muon(const Muon& other) = default;
 
         // Move constructor
-        Muon(Muon&& other) : Lepton(std::move(other)) {}
+        Muon(Muon&& other) = default;
 
         // Copy assignment operator
-        Muon& operator=(const Muon& other);
+        Muon& operator=(const Muon& other) = default;
 
         // Move assignment operator
-        Muon& operator=(Muon&& other);
+        Muon& operator=(Muon&& other) = default;
 };
 
 class Antimuon : public Muon
 {
     public:
-        // Default constructor
-        Antimuon();
-
         // Destructor
         ~Antimuon() override = default;
+
+        // Default constructor
+        Antimuon();
 
         // Parameterized constructor
         Antimuon(double px, double py, double pz);
 
         // Copy constructor
-        Antimuon(const Antimuon& other) : Muon(other) {}
+        Antimuon(const Antimuon& other) = default;
 
         // Move constructor
-        Antimuon(Antimuon&& other) : Muon(std::move(other)) {}
+        Antimuon(Antimuon&& other) = default;
 
         // Copy assignment operator
-        Antimuon& operator=(const Antimuon& other);
+        Antimuon& operator=(const Antimuon& other) = default;
 
         // Move assignment operator
-        Antimuon& operator=(Antimuon&& other);
+        Antimuon& operator=(Antimuon&& other) = default;
 };

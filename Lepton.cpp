@@ -1,39 +1,8 @@
 #include "Lepton.h"
 
-// Default constructor
-Lepton::Lepton()
+// Override print function
+void Lepton::print_data() const
 {
-    // Get lepton properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Lepton);
-    // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
-}
-
-// Parameterized constructor
-Lepton::Lepton(double px, double py, double pz)
-{
-    // Get lepton properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Lepton);
-    // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
-}
-
-// Copy assignment operator
-Lepton& Lepton::operator=(const Lepton& other)
-{
-    if (this != &other) 
-    {
-        Particle::operator=(other); // Call base class assignment operator
-    }
-    return *this;
-}
-
-// Move assignment operator
-Lepton& Lepton::operator=(Lepton&& other)
-{
-    if (this != &other) 
-    {
-        Particle::operator=(std::move(other)); // Call base class move assignment operator
-    }
-    return *this;
+    Particle::print_data();
+    std::cout << "Lepton number: " << lepton_number << "\n";
 }

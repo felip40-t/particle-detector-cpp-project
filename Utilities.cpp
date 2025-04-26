@@ -38,108 +38,175 @@ bool check_string_to_double(const std::string& str)
     return !(iss >> val).fail() && iss.eof();  // Ensure a valid double and no extra characters exist
 }
 
-void particle_menu()
+namespace DetectorUtils
 {
-    std::cout << "=========================\n";
-    std::cout << "Particle menu:\n";
-    std::cout << "=========================\n";
-    std::cout << "1. Photon\n";
-    std::cout << "2. Electron\n";
-    std::cout << "3. Positron\n";
-    std::cout << "4. Muon\n";
-    std::cout << "5. Anti-Muon\n";
-    std::cout << "6. Proton\n";
-    std::cout << "7. Neutron\n";
-    std::cout << "8. Random\n";
-}
-
-std::unique_ptr<Particle> choose_particle(int choice)
-{
-    switch (choice)
+    int check_layers()
     {
-        case 1: return std::make_unique<Photon>();
-        case 2: return std::make_unique<Electron>();
-        case 3: return std::make_unique<Positron>();
-        case 4: return std::make_unique<Muon>();
-        case 5: return std::make_unique<Antimuon>();
-        case 6: return std::make_unique<Proton>();
-        case 7: return std::make_unique<Neutron>();
-        default: return std::make_unique<Photon>();
-    }
-}
-
-std::unique_ptr<Particle> choose_random_particle()
-{
-    static std::random_device rand_dev;
-    static std::mt19937 generator(rand_dev());
-    std::uniform_int_distribution<int> distribution (1, 7);
-    int choice = distribution(generator);
-    return choose_particle(choice);
-}
-
-int check_layers()
-{
-    while (true)
-    {
-        std::cout << "Enter number of layers: ";
-        std::string input;
-        std::cin >> input;
-        if (check_string_to_int(input))
+        while (true)
         {
-            int layers = std::stoi(input);
-            if (layers > 0)
+            std::cout << "Enter number of layers: ";
+            std::string input;
+            std::cin >> input;
+            if (check_string_to_int(input))
             {
-                return layers;
-                break;
+                int layers = std::stoi(input);
+                if (layers > 0)
+                {
+                    return layers;
+                    break;
+                }
+                else
+                    std::cout << "Invalid number of layers. Please enter a positive integer.\n";
             }
             else
-                std::cout << "Invalid number of layers. Please enter a positive integer.\n";
-        }
-        else
-        {
-            std::cout << "Invalid input. Please enter a positive integer.\n";
+            {
+                std::cout << "Invalid input. Please enter a positive integer.\n";
+            }
         }
     }
-}
 
-double check_value_in_range(const std::string& prompt, double min, double max)
-{
-    while (true)
+    double check_value_in_range(const std::string& prompt, double min, double max)
     {
-        std::cout << prompt;
-        std::string input;
-        std::cin >> input;
-        if (check_string_to_double(input))
+        while (true)
         {
-            double value = std::stod(input);
-            if (value >= min && value <= max)
+            std::cout << prompt;
+            std::string input;
+            std::cin >> input;
+            if (check_string_to_double(input))
             {
-                return value;
+                double value = std::stod(input);
+                if (value >= min && value <= max)
+                {
+                    return value;
+                }
+                else
+                    std::cout << "Invalid input. Please enter a value between " << min << " and " << max << ".\n";
             }
             else
-                std::cout << "Invalid input. Please enter a value between " << min << " and " << max << ".\n";
-        }
-        else
-        {
-            std::cout << "Invalid input. Please enter a number.\n";
+            {
+                std::cout << "Invalid input. Please enter a number.\n";
+            }
         }
     }
-}
 
-// Check efficiency between 0 and 1
-double check_efficiency()
-{
-    return check_value_in_range("Enter efficiency (0-1): ", 0, 1);
-}
+    // Check efficiency between 0 and 1
+    double check_efficiency()
+    {
+        return check_value_in_range("Enter efficiency (0-1): ", 0, 1);
+    }
 
-// Check resolution is positive
-double check_resolution()
-{
-    return check_value_in_range("Enter resolution: ", 0, std::numeric_limits<double>::infinity());
-}
+    // Check resolution is positive
+    double check_resolution()
+    {
+        return check_value_in_range("Enter resolution: ", 0, std::numeric_limits<double>::infinity());
+    }
 
-// Check uncertainty is positive
-double check_uncertainty()
+    // Check uncertainty is positive
+    double check_uncertainty()
+    {
+        return check_value_in_range("Enter uncertainty: ", 0, std::numeric_limits<double>::infinity());
+    }
+
+    // Classify particle based on mass and using ParticleInfo map
+    // Only used for charged hadrons, other particles can be inferred by track
+    // check if within 10% of mass
+    int classify_particle_via_mass(double mass)
+    {
+        // Lambda function to check if mass is within 10% of target mass
+        auto is_within_10_percent = [](double mass, double target_mass) {
+            return (mass > target_mass * 0.9 && mass < target_mass * 1.1);
+        };
+
+        // List of particle types to check against
+        std::vector<ParticleInfo::ParticleType> candidates = {
+            ParticleInfo::ParticleType::PROTON,
+            ParticleInfo::ParticleType::PION_PLUS,
+            ParticleInfo::ParticleType::KAON_PLUS,
+        };
+
+        // Loop through all candidate particles
+        for (const auto& type : candidates)
+        {
+            double target_mass = ParticleInfo::get_particle_properties(type).get_mass();
+            if (is_within_10_percent(mass, target_mass))
+            {
+                if (type == ParticleInfo::ParticleType::PROTON)
+                {
+                    return 1; // Proton
+                }
+                else if (type == ParticleInfo::ParticleType::PION_PLUS)
+                {
+                    return 2; // Pion+
+                }
+                else if (type == ParticleInfo::ParticleType::KAON_PLUS)
+                {
+                    return 3; // Kaon+
+                }
+            }
+        }
+
+        // If no match is found, return 0
+        return 0;
+    }
+
+} // namespace DetectorUtils
+
+namespace ParticleListUtils 
 {
-    return check_value_in_range("Enter uncertainty: ", 0, std::numeric_limits<double>::infinity());
-}
+    void particle_menu()
+    {
+        std::cout << "=========================\n";
+        std::cout << "Particle menu:\n";
+        std::cout << "=========================\n";
+        std::cout << "1. Photon\n";
+        std::cout << "2. Electron\n";
+        std::cout << "3. Positron\n";
+        std::cout << "4. Muon\n";
+        std::cout << "5. Anti-Muon\n";
+        std::cout << "6. Proton\n";
+        std::cout << "7. Neutron\n";
+        std::cout << "8. Neutrino\n";
+        std::cout << "9. Anti-Neutrino\n";
+        std::cout << "10. Pion+\n";
+        std::cout << "11. Pion-\n";
+        std::cout << "12. Pion0\n";
+        std::cout << "13. Kaon+\n";
+        std::cout << "14. Kaon-\n";
+        std::cout << "15. Kaon0\n";
+        std::cout << "16. Random Particle\n";
+        std::cout << "=========================\n";
+    }
+
+    std::unique_ptr<Particle> choose_particle(int choice)
+    {
+        switch (choice)
+        {
+            case 1: return std::make_unique<Photon>();
+            case 2: return std::make_unique<Electron>();
+            case 3: return std::make_unique<Positron>();
+            case 4: return std::make_unique<Muon>();
+            case 5: return std::make_unique<Antimuon>();
+            case 6: return std::make_unique<Proton>();
+            case 7: return std::make_unique<Neutron>();
+            case 8: return std::make_unique<Neutrino>();
+            case 9: return std::make_unique<Antineutrino>();
+            case 10: return std::make_unique<PionPlus>();
+            case 11: return std::make_unique<PionMinus>();
+            case 12: return std::make_unique<PionZero>();
+            case 13: return std::make_unique<KaonPlus>();
+            case 14: return std::make_unique<KaonMinus>();
+            case 15: return std::make_unique<KaonZero>();
+            default: return std::make_unique<Photon>();
+        }
+    }
+
+    std::unique_ptr<Particle> choose_random_particle()
+    {
+        static std::random_device rand_dev;
+        static std::mt19937 generator(rand_dev());
+        std::uniform_int_distribution<int> distribution (1, 15);
+        int choice = distribution(generator);
+        return choose_particle(choice);
+    }
+
+} // namespace ParticleUtils

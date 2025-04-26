@@ -8,27 +8,41 @@
 #include "Electron.h"
 #include "Muon.h"
 #include "Photon.h"
-#include "Hadron.h"
+#include "Proton.h"
+#include "Neutron.h"
+#include "Pions.h"
+#include "Kaons.h"
+#include "Neutrino.h"
 
 void show_menu();
 
 bool check_string_to_int(const std::string& str);
-
 bool check_string_to_double(const std::string& str);
 
-void particle_menu();
+namespace DetectorUtils 
+{
+    // CHECKS
+    int check_layers();
+    double check_uncertainty();
+    double check_efficiency();
+    double check_resolution();
+    double check_value_in_range(const std::string& prompt, double min, double max);
+    int classify_particle_via_mass(double mass);
+} // namespace DetectorUtils
 
-std::unique_ptr<Particle> choose_particle(int choice);
 
-std::unique_ptr<Particle> choose_random_particle();
 
-int check_layers();
+namespace ParticleListUtils 
+{
+    // Print the particle menu
+    void particle_menu();
+    // function to choose a particle based on user input
+    std::unique_ptr<Particle> choose_particle(int choice);
+    // function to choose a random particle
+    std::unique_ptr<Particle> choose_random_particle();
+} // namespace ParticleListUtils
 
-double check_uncertainty();
-double check_efficiency();
-double check_resolution();
-
-namespace utils {
+namespace MathUtils {
     // Lambda function to calculate invariant mass squared
     inline auto invariant_mass_squared = [](double E, double px, double py, double pz) -> double {
         return E * E - (px * px + py * py + pz * pz);
@@ -43,4 +57,4 @@ namespace utils {
     inline auto roundToResolution = [](double value, double resolution) -> double {
         return std::round(value / resolution) * resolution;
     };
-}
+} // namespace MathUtils

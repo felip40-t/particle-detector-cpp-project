@@ -4,24 +4,26 @@
 class Photon : public Particle
 {
     public:
-        // Default constructor
-        Photon();
-        
+
         // Destructor
         ~Photon() override = default;
+
+        // Default constructor
+        Photon() : Particle(ParticleInfo::ParticleType::PHOTON) {}
         
         // Parameterized constructor
-        Photon(double px, double py, double pz);
+        Photon(double px, double py, double pz) 
+        : Particle(ParticleInfo::ParticleType::PHOTON, px, py, pz) {}
         
         // Copy constructor
-        Photon(const Photon& other) : Particle(other) {}
+        Photon(const Photon& other) = default;
         
         // Move constructor
-        Photon(Photon&& other) : Particle(std::move(other)) {}
+        Photon(Photon&& other) = default;
         
         // Copy assignment operator
-        Photon& operator=(const Photon& other);
+        Photon& operator=(const Photon& other) = default;
         
         // Move assignment operator
-        Photon& operator=(Photon&& other);
+        Photon& operator=(Photon&& other) = default;
 };

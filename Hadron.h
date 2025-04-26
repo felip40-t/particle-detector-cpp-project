@@ -3,75 +3,37 @@
 
 class Hadron : public Particle
 {
-    public:
-        // Default constructor
-        Hadron();
+    // Protected to prevent direct instantiation
+    protected:
+        // Baryon number: +1 for baryons, -1 for antibaryons, 0 for mesons
+        int baryon_number {1};
 
-        // Destructor
-        ~Hadron() override = default;
+        // Default constructor
+        Hadron(ParticleInfo::ParticleType type) : Particle(type) {}
 
         // Parameterized constructor
-        Hadron(double px, double py, double pz);
+        Hadron(ParticleInfo::ParticleType type, double px, double py, double pz)
+        : Particle(type, px, py, pz) {}
 
         // Copy constructor
-        Hadron(const Hadron& other) : Particle(other) {}
+        Hadron(const Hadron& other) = default;
 
         // Move constructor
-        Hadron(Hadron&& other) : Particle(std::move(other)) {}
+        Hadron(Hadron&& other) = default;
 
         // Copy assignment operator
-        Hadron& operator=(const Hadron& other);
+        Hadron& operator=(const Hadron& other) = default;
 
         // Move assignment operator
-        Hadron& operator=(Hadron&& other);
-};
+        Hadron& operator=(Hadron&& other) = default;
 
-class Proton : public Hadron
-{
     public:
-        // Default constructor
-        Proton();
-
         // Destructor
-        ~Proton() override = default;
+        virtual ~Hadron() = default;
 
-        // Parameterized constructor
-        Proton(double px, double py, double pz);
+        // Override print function
+        void print_data() const override;
 
-        // Copy constructor
-        Proton(const Proton& other) : Hadron(other) {}
-
-        // Move constructor
-        Proton(Proton&& other) : Hadron(std::move(other)) {}
-
-        // Copy assignment operator
-        Proton& operator=(const Proton& other);
-
-        // Move assignment operator
-        Proton& operator=(Proton&& other);
-};
-
-class Neutron : public Hadron
-{
-    public:
-        // Default constructor
-        Neutron();
-
-        // Destructor
-        ~Neutron() override = default;
-
-        // Parameterized constructor
-        Neutron(double px, double py, double pz);
-
-        // Copy constructor
-        Neutron(const Neutron& other) : Hadron(other) {}
-
-        // Move constructor
-        Neutron(Neutron&& other) : Hadron(std::move(other)) {}
-
-        // Copy assignment operator
-        Neutron& operator=(const Neutron& other);
-
-        // Move assignment operator
-        Neutron& operator=(Neutron&& other);
+        // Get baryon number
+        int get_baryon_number() const { return baryon_number; }
 };

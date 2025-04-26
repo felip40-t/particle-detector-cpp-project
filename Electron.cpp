@@ -1,80 +1,22 @@
 #include "Electron.h"
 
-
-// Electron class implementation
-// Default constructor
-Electron::Electron()
-{
-    // Get electron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
-    // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
-}
-
-// Parameterized constructor
-Electron::Electron(double px, double py, double pz)
-{
-    // Get electron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Electron);
-    // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
-}
-
-// Copy assignment operator
-Electron& Electron::operator=(const Electron& other)
-{
-    if (this != &other) 
-    {
-        Lepton::operator=(other); // Call base class assignment operator
-    }
-    return *this;
-}
-
-// Move assignment operator
-Electron& Electron::operator=(Electron&& other)
-{
-    if (this != &other) 
-    {
-        Lepton::operator=(std::move(other)); // Call base class move assignment operator
-    }
-    return *this;
-}
-
 // Positron class implementation
 // Default constructor
 Positron::Positron()
+: Electron()
 {
     // Get positron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
-    // Create a new FourMomentum object with random momentum
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass());
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::POSITRON);
+    // Set lepton number
+    lepton_number = -1;
 }
 
 // Parameterized constructor
 Positron::Positron(double px, double py, double pz)
+: Electron(px, py, pz)
 {
     // Get positron properties
-    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::Positron);
-    // Create a new FourMomentum object
-    four_momentum = std::make_unique<FourMomentum>(properties.get_mass(), px, py, pz);
-}
-
-// Copy assignment operator
-Positron& Positron::operator=(const Positron& other)
-{
-    if (this != &other) 
-    {
-        Electron::operator=(other); // Call base class assignment operator
-    }
-    return *this;
-}
-
-// Move assignment operator
-Positron& Positron::operator=(Positron&& other)
-{
-    if (this != &other) 
-    {
-        Electron::operator=(std::move(other)); // Call base class move assignment operator
-    }
-    return *this;
+    properties = ParticleInfo::get_particle_properties(ParticleInfo::ParticleType::POSITRON);
+    // Set lepton number
+    lepton_number = -1;
 }

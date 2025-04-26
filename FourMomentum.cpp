@@ -22,7 +22,7 @@ FourMomentum::FourMomentum(double rest_mass)
         four_momentum[i+1] = distribution(generator);
     }
     // Set energy
-    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass * rest_mass);
+    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass * rest_mass);
 }
 
 // Parameterized constructor
@@ -41,7 +41,7 @@ FourMomentum::FourMomentum(double rest_mass, double px, double py, double pz)
         std::cerr << "Setting momentum components to zero." << std::endl;
         px = py = pz = 0.0;
     }
-    four_momentum[0] = sqrt(utils::momentum_squared(px, py, pz) + rest_mass * rest_mass);
+    four_momentum[0] = sqrt(MathUtils::momentum_squared(px, py, pz) + rest_mass * rest_mass);
     four_momentum[1] = px;
     four_momentum[2] = py;
     four_momentum[3] = pz;
@@ -93,7 +93,7 @@ double FourMomentum::get_component(int index) const
 // Setters for momentum components
 void FourMomentum::set_px(double px) 
 {
-    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
+    double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure px is finite and real
     if (std::isnan(px) || std::isinf(px))
     {
@@ -103,12 +103,12 @@ void FourMomentum::set_px(double px)
     }
     four_momentum[1] = px;
     // Calculate the energy based on the new momentum
-    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
+    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
 void FourMomentum::set_py(double py) 
 {
-    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
+    double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure py is finite and real
     if (std::isnan(py) || std::isinf(py))
     {
@@ -118,12 +118,12 @@ void FourMomentum::set_py(double py)
     }
     four_momentum[2] = py;
     // Calculate the energy based on the new momentum
-    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
+    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
 void FourMomentum::set_pz(double pz) 
 {
-    double rest_mass_sqrd = utils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
+    double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
     // Ensure pz is finite and real
     if (std::isnan(pz) || std::isinf(pz))
     {
@@ -133,7 +133,7 @@ void FourMomentum::set_pz(double pz)
     }
     four_momentum[3] = pz;
     // Calculate the energy based on the new momentum 
-    four_momentum[0] = sqrt(utils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
+    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
 // Print function
@@ -144,7 +144,7 @@ void FourMomentum::print() const
     {
         std::cout << four_momentum[i] << " ";
     }
-    std::cout << "]" << std::endl;
+    std::cout << "] MeV (natural units)" << std::endl;
 }
 
 // Overloaded sum operator
