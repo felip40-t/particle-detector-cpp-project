@@ -42,6 +42,11 @@ class SubDetector
         double get_resolution() const { return resolution; }
         double get_uncertainty() const { return uncertainty; }
 
+        // Setters for efficiency, resolution, and uncertainty
+        void set_efficiency(double efficiency);
+        void set_resolution(double resolution);
+        void set_uncertainty(double uncertainty);
+
         // Virtual print function
         virtual void print() const;
 

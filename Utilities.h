@@ -15,7 +15,7 @@
 #include "Neutrino.h"
 
 void show_menu();
-
+void help_menu();
 bool check_string_to_int(const std::string& str);
 bool check_string_to_double(const std::string& str);
 

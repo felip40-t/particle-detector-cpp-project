@@ -25,15 +25,24 @@ Each sub-detector attempts to detect the particle and measure its properties (en
 
 ## Supported Particles
 
-| Particle     | Type       | Charge | Mass (MeV/c²) |
-|--------------|------------|--------|----------------|
-| Electron     | Lepton     | -1     | 0.511          |
-| Positron     | Lepton     | +1     | 0.511          |
-| Photon       | Boson      | 0      | 0              |
-| Muon         | Lepton     | -1     | 105.7          |
-| Antimuon     | Lepton     | +1     | 105.7          |
-| Proton       | Hadron     | +1     | 938.3          |
-| Neutron      | Hadron     | 0      | 939.6          |
+| Particle        | Type        | Charge | Mass (MeV/c²) |
+|-----------------|-------------|--------|---------------|
+| Photon          | Boson       | 0      | 0             |
+| Electron        | Lepton      | -1     | 0.511         |
+| Positron        | Lepton      | +1     | 0.511         |
+| Muon            | Lepton      | -1     | 105.7         |
+| Anti-Muon       | Lepton      | +1     | 105.7         |
+| Proton          | Hadron      | +1     | 938.3         |
+| Neutron         | Hadron      | 0      | 939.6         |
+| Neutrino        | Lepton      | 0      | ~0            |
+| Anti-Neutrino   | Lepton      | 0      | ~0            |
+| Pion⁺           | Meson       | +1     | 139.6         |
+| Pion⁻           | Meson       | -1     | 139.6         |
+| Pion⁰           | Meson       | 0      | 135.0         |
+| Kaon⁺           | Meson       | +1     | 493.7         |
+| Kaon⁻           | Meson       | -1     | 493.7         |
+| Kaon⁰           | Meson       | 0      | 497.6         |
+
 
 ## Class Hierarchy
 
@@ -42,14 +51,23 @@ Each sub-detector attempts to detect the particle and measure its properties (en
 Particle
 ├─ Lepton
 │  ├─ Electron
-│  ├─ Positron
+│  │  └─ Positron
 │  ├─ Muon
-│  └─ Antimuon
+│  │  └─ Antimuon
+│  └─ Neutrino
+│     └─ Antineutrino
 ├─ Hadron
 │  ├─ Proton
-│  └─ Neutron
-└─ Boson
-   └─ Photon
+│  ├─ Neutron
+│  ├─ Pion
+│  │  ├─ Pion+
+│  │  ├─ Pion-
+│  │  └─ Pion0
+│  └─ Kaon
+│     ├─ Kaon+
+│     ├─ Kaon-
+│     └─ Kaon0
+└─ Photon
 ```
 
 ### Sub-detectors

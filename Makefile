@@ -2,28 +2,37 @@
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -O2 -MMD -MP
 
-# Sources and objects
+# Build directory
+BUILD_DIR := build
+
+# Sources, objects, and dependency files
 SRC := $(wildcard *.cpp)
-OBJ := $(SRC:.cpp=.o)
-DEP := $(SRC:.cpp=.d)
-EXEC := particle_detector
+OBJ := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))
+DEP := $(patsubst %.cpp, $(BUILD_DIR)/%.d, $(SRC))
+
+# Executable
+EXEC := $(BUILD_DIR)/particle_detector
 
 # Default target
 all: $(EXEC)
 
+# Ensure build directory exists
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
 # Linking
-$(EXEC): $(OBJ)
+$(EXEC): $(OBJ) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compilation rule
-%.o: %.cpp
+$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(DEP) $(EXEC)
+	rm -rf $(BUILD_DIR)
 
-# Include auto-generated dependency files
+# Include dependency files
 -include $(DEP)
 
 .PHONY: all clean

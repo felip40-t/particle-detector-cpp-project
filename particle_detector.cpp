@@ -28,6 +28,11 @@ int main() {
         std::cin >> choice;
         if (!check_string_to_int(choice)) 
         {
+            if (choice == "?")
+            {
+                help_menu();
+                continue;
+            }
             std::cout << "Invalid input. Please enter a number.\n";
             continue;
         }

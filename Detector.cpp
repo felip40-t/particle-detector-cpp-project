@@ -161,14 +161,22 @@ void Detector::detect(const Particle& particle) const
     {
         // Reconstruct 4-momentum using energy and momentum 
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
+        // Check mass
+        double inv_mass_sqr = four_momentum * four_momentum;
+        if (inv_mass_sqr < 0)
+        {
+            std::cout << "Reconstructed four-momentum yields unphysical invariant mass.\n";
+            std::cout << "Try changing the resolution and uncertainty of the sub-detectors.\n";
+            return;
+        }
         // Check charge to see if it is an electron or positron
         if (measurement.charge < 0)
         {
-            std::cout << "Electron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
+            std::cout << "Electron detected with invariant mass: " << sqrt(inv_mass_sqr) << " MeV/c^2\n";
         }
         else
         {
-            std::cout << "Positron detected with invariant mass: " << sqrt(four_momentum * four_momentum) << " MeV/c^2\n";
+            std::cout << "Positron detected with invariant mass: " << sqrt(inv_mass_sqr) << " MeV/c^2\n";
         }
         std::cout << "Four momentum measured:\n";
         four_momentum.print();
@@ -179,7 +187,15 @@ void Detector::detect(const Particle& particle) const
     else if (measurement.hadron_calorimeter && measurement.track)
     {
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
-        double invariant_mass = sqrt(four_momentum * four_momentum);
+        double inv_mass_sqr = four_momentum * four_momentum;
+        if (inv_mass_sqr < 0)
+        {
+            std::cout << "Reconstructed four-momentum yields unphysical invariant mass.\n";
+            std::cout << "Try changing the resolution and uncertainty of the sub-detectors.\n";
+            return;
+        }
+        double invariant_mass = sqrt(inv_mass_sqr);
+        // Classify the particle using invariant mass
         int particle_type = DetectorUtils::classify_particle_via_mass(invariant_mass);
         // Check charge to see if it is a positive or negative hadron
         if (measurement.charge > 0)
@@ -264,6 +280,13 @@ void Detector::detect(const Particle& particle) const
     else if (!measurement.track && !measurement.em_calorimeter && !measurement.hadron_calorimeter && !measurement.muon_chamber)
     {
         std::cout << "No sub-detectors detected the particle. Neutrino passed through" << std::endl;
+        std::cout << "True four momentum:\n";
+        particle.get_four_momentum().print();
+    }
+    // Anything else return message
+    else
+    {
+        std::cout << "Particle detected in Tracker but not classified.\n";
         std::cout << "True four momentum:\n";
         particle.get_four_momentum().print();
     }

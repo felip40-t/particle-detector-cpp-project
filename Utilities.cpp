@@ -5,6 +5,8 @@ void show_menu()
     std::cout << "===================================================\n";
     std::cout << "Particle Detector Simulation Menu:\n";
     std::cout << "===================================================\n";
+    std::cout << "Choose an option:\n";
+    std::cout << "?. Help\n";
     std::cout << "1. Add a sub-detector\n";
     std::cout << "2. Remove a sub-detector\n";
     std::cout << "3. Clear all sub-detectors\n";
@@ -15,6 +17,28 @@ void show_menu()
     std::cout << "8. Print particles' information\n";
     std::cout << "9. Detect particles\n";
     std::cout << "0. Exit\n";
+}
+
+// Help menu to explain the options
+void help_menu()
+{
+    std::cout << "===================================================\n";
+    std::cout << "Help\n";
+    std::cout << "===================================================\n";
+    std::cout << "This program simulates a particle detector.\n\n";
+    std::cout << "You have a main detector composed of sub-detectors.\n";
+    std::cout << "You can add or remove sub-detectors, and each sub-detector can detect different\nquantities and particles.\n";
+    std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
+    std::cout << "You can set these parameters when adding a sub-detector.\n";
+    std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
+    std::cout << "You also have a list of particles that can be detected.\n";
+    std::cout << "You can add or remove particles from the list.\n";
+    std::cout << "When adding a particle, you can choose a specific particle or a random one.\n\n";
+    std::cout << "Then, by choosing to detect the particles, the program will simulate the detection process.\n";
+    std::cout << "The program will attempt to reconstruct the four-momentum of the detected particles.\n";
+    std::cout << "If the invariant mass is negative, it means the four-momentum is unphysical.\n";
+    std::cout << "This usually happens when the resolution and uncertainty of the sub-detectors are too high\nfor the given particle.\n";
+    
 }
 
 bool check_string_to_int(const std::string& str) 
