@@ -10,26 +10,26 @@ class Tracker : public SubDetector
         string material; // Material used in the tracker
 
     public:
+        // Destructor
+        ~Tracker() override = default;
+
         // Default constructor
         Tracker();
 
         // Parameterized constructor
         Tracker(double efficiency, double resolution, double uncertainty, int layers, string material);
 
-        // Destructor
-        ~Tracker() override = default;
-
         // Copy constructor
-        Tracker(const Tracker& other);
+        Tracker(const Tracker& other) = default;
 
         // Move constructor
-        Tracker(Tracker&& other);
+        Tracker(Tracker&& other) = default;
         
         // Copy assignment operator
-        Tracker& operator=(const Tracker& other);
+        Tracker& operator=(const Tracker& other) = default;
 
         // Move assignment operator
-        Tracker& operator=(Tracker&& other);
+        Tracker& operator=(Tracker&& other) = default;
 
         // Getters for tracker properties
         int get_layers() const { return layers; }

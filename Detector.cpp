@@ -54,7 +54,7 @@ void Detector::add_subdetector()
     if (choice == 1)
     {
         // Add more materials
-        add_subdetector(std::make_unique<Tracker>(efficiency, resolution, uncertainty, DetectorUtils::check_layers(), "Silicon"));
+        add_subdetector(std::make_unique<Tracker>(efficiency, resolution, uncertainty, DetectorUtils::check_layers(), DetectorUtils::check_tracker_material()));
     }
     else if (choice == 2)
     {

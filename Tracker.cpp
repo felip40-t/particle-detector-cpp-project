@@ -1,15 +1,13 @@
 #include "Tracker.h"
 
 // Default constructor
-Tracker::Tracker()
+Tracker::Tracker() 
+: SubDetector()
 {
     type = SubDetectorInfo::SubDetectorType::Tracker;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
-    efficiency = 1.0;
-    resolution = 0.0;
-    uncertainty = 0.0;
-    layers = 1;
-    material = "Default Material";
+    layers = 1; // Default number of layers
+    material = "Silicon pixels"; // Default material
 }
 
 // Parameterized constructor
@@ -19,61 +17,28 @@ Tracker::Tracker(double efficiency, double resolution, double uncertainty, int l
     type = SubDetectorInfo::SubDetectorType::Tracker;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
 
-    if (layers < 0 || std::isnan(layers) || std::isinf(layers)) 
+    if (DetectorUtils::check_value_in_range(layers, 1, std::numeric_limits<int>::max()))
     {
-        try 
-        {
-            throw std::invalid_argument("Tracker: Number of layers must be non-negative, finite and real.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting layers to 1." << std::endl;
-            layers = 1;
-        }
-    }
-    this->layers = layers;
-    if (material == "Silicon")
-    {
-        this->material = "Silicon";
+        this->layers = layers;
     }
     else
     {
-        this->material = "Silicon";
-        std::cout << "Tracker: Material not recognized. Setting to Silicon." << std::endl;
+        this->layers = 1;
+        std::cout << "Tracker: Invalid number of layers. Setting to 1." << std::endl;
     }
-}
-
-// Copy constructor
-Tracker::Tracker(const Tracker& other)
-    : SubDetector(other), layers(other.layers), material(other.material) {}
-
-// Move constructor
-Tracker::Tracker(Tracker&& other)
-    : SubDetector(std::move(other)), layers(other.layers), material(std::move(other.material)) {}
-
-// Copy assignment operator
-Tracker& Tracker::operator=(const Tracker& other) 
-{
-    if (this != &other) 
+    if (material == "Silicon pixels")
+        this->material = material;
+    else if (material == "Silicon strips")
+        this->material = material;
+    else if (material == "TPCs")
+        this->material = material;
+    else if (material == "Scintillator")
+        this->material = material;
+    else
     {
-        SubDetector::operator=(other);
-        layers = other.layers;
-        material = other.material;
+        this->material = "Silicon pixels";
+        std::cout << "Tracker: Material not recognized. Setting to Silicon pixels." << std::endl;
     }
-    return *this;
-}
-
-// Move assignment operator
-Tracker& Tracker::operator=(Tracker&& other) 
-{
-    if (this != &other) 
-    {
-        SubDetector::operator=(std::move(other));
-        layers = other.layers;
-        material = std::move(other.material);
-    }
-    return *this;
 }
 
 // Print function

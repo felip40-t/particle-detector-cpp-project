@@ -11,7 +11,6 @@ namespace SubDetectorInfo
     // Enumerator class for sub-detector types
     enum class SubDetectorType
     {
-        Default,
         Tracker,
         MuonChamber,
         HadronCalorimeter,

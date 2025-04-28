@@ -31,14 +31,15 @@ void help_menu()
     std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
     std::cout << "You can set these parameters when adding a sub-detector.\n";
     std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
-    std::cout << "You also have a list of particles that can be detected.\n";
+    std::cout << "You also have a list of particles that will be detected.\n";
     std::cout << "You can add or remove particles from the list.\n";
     std::cout << "When adding a particle, you can choose a specific particle or a random one.\n\n";
     std::cout << "Then, by choosing to detect the particles, the program will simulate the detection process.\n";
     std::cout << "The program will attempt to reconstruct the four-momentum of the detected particles.\n";
     std::cout << "If the invariant mass is negative, it means the four-momentum is unphysical.\n";
-    std::cout << "This usually happens when the resolution and uncertainty of the sub-detectors are too high\nfor the given particle.\n";
-    
+    std::cout << "This usually happens when the resolution and uncertainty of the sub-detectors are too high\nfor the given particle.\n\n";
+    std::cout << "Check the README.md file for more information on the particles.\n";
+    std::cout << "===================================================\n";
 }
 
 bool check_string_to_int(const std::string& str) 
@@ -77,7 +78,6 @@ namespace DetectorUtils
                 if (layers > 0)
                 {
                     return layers;
-                    break;
                 }
                 else
                     std::cout << "Invalid number of layers. Please enter a positive integer.\n";
@@ -89,7 +89,45 @@ namespace DetectorUtils
         }
     }
 
-    double check_value_in_range(const std::string& prompt, double min, double max)
+    std::string check_tracker_material()
+    {
+        while (true)
+        {
+            tracker_material_menu();
+            std::cout << "Enter choice: ";
+            std::string input;
+            std::cin >> input;
+            if (check_string_to_int(input))
+            {
+                int choice = std::stoi(input);
+                switch (choice)
+                {
+                    case 1: return "Silicon pixels";
+                    case 2: return "Silicon strips";
+                    case 3: return "TPCs";
+                    case 4: return "Scintillator";
+                    default:
+                        std::cout << "Invalid choice. Please enter a number between 1 and 4.\n";
+                        break;
+                }
+            }
+            else
+            {
+                std::cout << "Invalid input. Please enter a number.\n";
+            }
+        }
+    }
+
+    void tracker_material_menu()
+    {
+        std::cout << "Choose tracker material:\n";
+        std::cout << "1. Silicon pixels\n";
+        std::cout << "2. Silicon strips\n";
+        std::cout << "3. TPCs\n";
+        std::cout << "4. Scintillator\n";
+    }
+
+    double check_input_in_range(const std::string& prompt, double min, double max)
     {
         while (true)
         {
@@ -104,7 +142,7 @@ namespace DetectorUtils
                     return value;
                 }
                 else
-                    std::cout << "Invalid input. Please enter a value between " << min << " and " << max << ".\n";
+                    std::cout << "Invalid input. Please enter a value within the correct limits.\n";
             }
             else
             {
@@ -116,20 +154,21 @@ namespace DetectorUtils
     // Check efficiency between 0 and 1
     double check_efficiency()
     {
-        return check_value_in_range("Enter efficiency (0-1): ", 0, 1);
+        return check_input_in_range("Enter efficiency (0-1): ", 0, 1);
     }
 
     // Check resolution is positive
     double check_resolution()
     {
-        return check_value_in_range("Enter resolution: ", 0, std::numeric_limits<double>::infinity());
+        return check_input_in_range("Enter resolution: ", 0, std::numeric_limits<double>::infinity());
     }
 
     // Check uncertainty is positive
     double check_uncertainty()
     {
-        return check_value_in_range("Enter uncertainty: ", 0, std::numeric_limits<double>::infinity());
+        return check_input_in_range("Enter uncertainty: ", 0, std::numeric_limits<double>::infinity());
     }
+
 
     // Classify particle based on mass and using ParticleInfo map
     // Only used for charged hadrons, other particles can be inferred by track

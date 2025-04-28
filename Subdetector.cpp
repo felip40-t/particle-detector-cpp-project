@@ -1,61 +1,20 @@
 #include "Subdetector.h"
 
 
-// Default constructor
+// Default constructor - used for derived classes
+// Doesn't initialise the type or name since the derived class will do that
 SubDetector::SubDetector()
-    : type(SubDetectorInfo::SubDetectorType::Default), 
-      name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default)),
-      efficiency(1.0),
-      resolution(0.0),
+    : efficiency(1.0),
+      resolution(1e-10),
       uncertainty(0.0) {}
 
-// Parameterized constructor
+// Parameterized constructor - used for derived classes
 SubDetector::SubDetector(double efficiency, double resolution, double uncertainty)
-    : type(SubDetectorInfo::SubDetectorType::Default), 
-      name(SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Default))
 {
-    if (efficiency < 0.0 || efficiency > 1.0 || std::isnan(efficiency))
-    {
-        try
-        {
-            throw std::invalid_argument("SubDetector: Efficiency must be between 0 and 1.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting efficiency to 1.0." << std::endl;
-            efficiency = 1.0;
-        }
-    }
-    this->efficiency = efficiency;
-    if (resolution < 0.0 || std::isnan(resolution) || std::isinf(resolution))
-    {
-        try
-        {
-            throw std::invalid_argument("SubDetector: Resolution must be non-negative, finite and real.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting resolution to 0.0." << std::endl;
-            resolution = 0.0;
-        }
-    }
-    this->resolution = resolution;
-    if (uncertainty < 0.0 || std::isnan(uncertainty) || std::isinf(uncertainty))
-    {
-        try
-        {
-            throw std::invalid_argument("SubDetector: Uncertainty must be non-negative, finite and real.");
-        } 
-        catch (const std::invalid_argument& e) 
-        {
-            std::cout << e.what() << std::endl;
-            std::cout << "Setting uncertainty to 0.0." << std::endl;
-            uncertainty = 0.0;
-        }
-    }
-    this->uncertainty = uncertainty;
+    // Set efficiency, resolution, and uncertainty
+    set_efficiency(efficiency);
+    set_resolution(resolution);
+    set_uncertainty(uncertainty);
 }
 
 // Copy constructor
@@ -108,4 +67,46 @@ void SubDetector::print() const
     std::cout << "Resolution: " << resolution << std::endl;
     std::cout << "Uncertainty: " << uncertainty << std::endl;
 }
+
+// Setters for efficiency, resolution, and uncertainty
+void SubDetector::set_efficiency(double efficiency)
+{
+    if (DetectorUtils::check_value_in_range(efficiency, 0.0, 1.0)) 
+    {
+        this->efficiency = efficiency;
+    } 
+    else 
+    {
+        std::cerr << "SubDetector : Efficiency must be between 0 and 1.\nSetting to 1.0" << std::endl;
+        this->efficiency = 1.0; // Default value
+    }
+}
+
+void SubDetector::set_resolution(double resolution)
+{
+    if (DetectorUtils::check_value_in_range(resolution, 0.0, std::numeric_limits<double>::infinity())) 
+    {
+        this->resolution = resolution;
+    } 
+    else 
+    {
+        std::cerr << "SubDetector : Resolution must be positive.\nSetting to 10^-10" << std::endl;
+        this->resolution = 1e-10; // Default value
+    }
+}
+
+void SubDetector::set_uncertainty(double uncertainty)
+{
+    if (DetectorUtils::check_value_in_range(uncertainty, 0.0, std::numeric_limits<double>::infinity())) 
+    {
+        this->uncertainty = uncertainty;
+    } 
+    else 
+    {
+        std::cerr << "SubDetector : Uncertainty must be positive.\nSetting to 0.0" << std::endl;
+        this->uncertainty = 0.0; // Default value
+    }
+}
+
+
 

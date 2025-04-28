@@ -22,12 +22,25 @@ bool check_string_to_double(const std::string& str);
 namespace DetectorUtils 
 {
     // CHECKS
+    //Check for tracker layers from user input
     int check_layers();
+    // Check for tracker material from user input
+    std::string check_tracker_material();
+    void tracker_material_menu();
     double check_uncertainty();
     double check_efficiency();
     double check_resolution();
-    double check_value_in_range(const std::string& prompt, double min, double max);
+    double check_input_in_range(const std::string& prompt, double min, double max);
+    // Template function to check if a value is within a range
+    // Must be implemented in header file
+    template <typename T>
+    bool check_value_in_range(T value, T min, T max)
+    {
+        return value >= min && value <= max;
+    }
+    // Helper function to classify particle detection
     int classify_particle_via_mass(double mass);
+    
 } // namespace DetectorUtils
 
 
