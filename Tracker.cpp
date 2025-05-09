@@ -17,7 +17,7 @@ Tracker::Tracker(double efficiency, double resolution, double uncertainty, int l
     type = SubDetectorInfo::SubDetectorType::Tracker;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::Tracker);
 
-    if (DetectorUtils::check_value_in_range(layers, 1, std::numeric_limits<int>::max()))
+    if (MathUtils::check_value_in_range(layers, 1, std::numeric_limits<int>::max()))
     {
         this->layers = layers;
     }
@@ -26,13 +26,7 @@ Tracker::Tracker(double efficiency, double resolution, double uncertainty, int l
         this->layers = 1;
         std::cout << "Tracker: Invalid number of layers. Setting to 1." << std::endl;
     }
-    if (material == "Silicon pixels")
-        this->material = material;
-    else if (material == "Silicon strips")
-        this->material = material;
-    else if (material == "TPCs")
-        this->material = material;
-    else if (material == "Scintillator")
+    if (material == "Silicon pixels" || material == "Silicon strips" || material == "TPCs" || material == "Scintillator")
         this->material = material;
     else
     {
@@ -46,18 +40,20 @@ void Tracker::print() const
 {
     std::cout << "Sub-detector: " << name << std::endl;
     std::cout << "Efficiency: " << efficiency << std::endl;
-    std::cout << "Resolution: " << resolution << std::endl;
-    std::cout << "Uncertainty: " << uncertainty << std::endl;
-    std::cout << "Layers: " << layers << std::endl;
+    std::cout << "Resolution: " << resolution << " MeV" << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << " MeV" << std::endl;
     std::cout << "Material: " << material << std::endl;
+    std::cout << "Layers: " << layers << std::endl;
 }
 
 // Detect function 
 void Tracker::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
     // Simulate detection
-    // Check if particle is charged
-    if (particle.get_properties().get_charge() != 0)
+    // Check if particle is charged and the muon chamber 
+    // has not already detected it in order to avoid overwriting
+    // the muon chamber's measurement
+    if (particle.get_properties().get_charge() != 0 && !measurement.muon_chamber)
     {
         // Simulate detection with efficiency
         static std::random_device random_device;
@@ -73,8 +69,9 @@ void Tracker::detect(const Particle& particle, SubDetectorInfo::Measurement& mea
             // Simulate resolution smearing effect for each component of the particle's momentum
             for (int i = 1; i <= 3; ++i)
             {   
-                // generate normal distribution with mean = 0 and stddev = uncertainty
-                std::normal_distribution<double> normal_distribution(0.0, uncertainty);
+                // generate normal distribution with mean = 0 and stddev = uncertainty% of the absolute momentum
+                double uncertainty_value = std::abs(particle.get_four_momentum().get_component(i)) * (uncertainty / 100.0);
+                std::normal_distribution<double> normal_distribution(0.0, uncertainty_value);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
                 measurement.momentum[i - 1] = MathUtils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
             }

@@ -2,12 +2,10 @@
 
 // Default constructor
 HadronCalorimeter::HadronCalorimeter()
+: SubDetector()
 {
     type = SubDetectorInfo::SubDetectorType::HadronCalorimeter;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::HadronCalorimeter);
-    efficiency = 1.0;
-    resolution = 0.0;
-    uncertainty = 0.0;
 }
 
 // Parameterized constructor
@@ -35,7 +33,8 @@ void HadronCalorimeter::detect(const Particle& particle, SubDetectorInfo::Measur
             measurement.hadron_calorimeter = true; // Set the measurement flag for HadronCalorimeter
             std::cout << "Particle detected in " << name << std::endl;
             // Simulate the smearing of energy
-            std::normal_distribution<double> energy_distribution(0.0, uncertainty);
+            double uncertainty_value = std::abs(particle.get_four_momentum().get_component(0)) * (uncertainty / 100.0);
+            std::normal_distribution<double> energy_distribution(0.0, uncertainty_value);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
             measurement.energy = MathUtils::roundToResolution(smeared_energy, resolution);
         }

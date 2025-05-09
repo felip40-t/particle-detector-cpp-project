@@ -2,20 +2,39 @@
 
 // Default constructor
 MuonChamber::MuonChamber()
+: SubDetector()
 {
     type = SubDetectorInfo::SubDetectorType::MuonChamber;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::MuonChamber);
-    efficiency = 1.0;
-    resolution = 0.0;
-    uncertainty = 0.0;
+
+    technology = "DTs"; // Default technology
+    num_of_technology = 1; // Default number of technology
 }
 
 // Parameterized constructor
-MuonChamber::MuonChamber(double efficiency, double resolution, double uncertainty)
+MuonChamber::MuonChamber(double efficiency, double resolution, double uncertainty, int num_of_technology, std::string technology)
     : SubDetector(efficiency, resolution, uncertainty)
 {
     type = SubDetectorInfo::SubDetectorType::MuonChamber;
     name = SubDetectorInfo::get_subdetector_names(SubDetectorInfo::SubDetectorType::MuonChamber);
+
+    if (technology == "DTs" || technology == "CSCs" || technology == "RPCs" || technology == "GEMs")
+        this->technology = technology;
+    else
+    {
+        this->technology = "DTs";
+        std::cout << "MuonChamber: Technology not recognized. Setting to DTs." << std::endl;
+    }
+
+    if (MathUtils::check_value_in_range(num_of_technology, 1, std::numeric_limits<int>::max()))
+    {
+        this->num_of_technology = num_of_technology;
+    }
+    else
+    {
+        this->num_of_technology = 1;
+        std::cout << "MuonChamber: Invalid number of " << technology << ". Setting to 1." << std::endl;
+    }
 }
 
 
@@ -39,11 +58,23 @@ void MuonChamber::detect(const Particle& particle, SubDetectorInfo::Measurement&
             // Simulate resolution smearing effect for each component of the particle's momentum
             for (int i = 1; i <= 3; ++i)
             {
-                // generate normal distribution with mean = 0 and stddev = uncertainty
-                std::normal_distribution<double> normal_distribution(0.0, uncertainty);
+                // generate normal distribution with mean = 0 and stddev = uncertainty% of the absolute momentum
+                double uncertainty_value = std::abs(particle.get_four_momentum().get_component(i)) * (uncertainty / 100.0);
+                std::normal_distribution<double> normal_distribution(0.0, uncertainty_value);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
                 measurement.momentum[i - 1] = MathUtils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
             }
         }
     }
+}
+
+// Print function
+void MuonChamber::print() const
+{
+    std::cout << "Sub-detector: " << name << std::endl;
+    std::cout << "Efficiency: " << efficiency << std::endl;
+    std::cout << "Resolution: " << resolution << " MeV" << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << " MeV" << std::endl;
+    std::cout << "Technology: " << technology << std::endl;
+    std::cout << "Number of " << technology << ": " << num_of_technology << std::endl;
 }

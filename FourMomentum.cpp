@@ -142,9 +142,10 @@ void FourMomentum::print() const
     std::cout << "[ ";
     for (int i = 0; i < 4; ++i)
     {
-        std::cout << four_momentum[i] << " ";
+        std::cout << four_momentum[i];
+        if (i < 3) std::cout << ", ";
     }
-    std::cout << "] MeV (natural units)" << std::endl;
+    std::cout << " ] MeV/c" << std::endl;
 }
 
 // Overloaded sum operator

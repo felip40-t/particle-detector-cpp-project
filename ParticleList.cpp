@@ -19,6 +19,12 @@ void ParticleList::add_particle()
         }
 }
 
+// Add a custom particle to the list
+void ParticleList::add_custom_particle(std::unique_ptr<Particle>&& particle)
+{
+    particles.push_back(std::move(particle));
+}
+
 void ParticleList::remove_particle()
 {
     if (particles.empty()) 

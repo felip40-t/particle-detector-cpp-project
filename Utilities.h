@@ -16,8 +16,10 @@
 
 void show_menu();
 void help_menu();
+void subdetector_menu();
 bool check_string_to_int(const std::string& str);
 bool check_string_to_double(const std::string& str);
+
 
 namespace DetectorUtils 
 {
@@ -26,23 +28,20 @@ namespace DetectorUtils
     int check_layers();
     // Check for tracker material from user input
     std::string check_tracker_material();
+    // Check for muon chamber technology from user input
+    std::string check_muon_chamber_technology();
+    int check_number_of_technology(std::string technology);
+    // Show the tracker material menu
     void tracker_material_menu();
+    // Show the muon chamber menu
+    void muon_chamber_menu();
+    // Check
     double check_uncertainty();
     double check_efficiency();
     double check_resolution();
     double check_input_in_range(const std::string& prompt, double min, double max);
-    // Template function to check if a value is within a range
-    // Must be implemented in header file
-    template <typename T>
-    bool check_value_in_range(T value, T min, T max)
-    {
-        return value >= min && value <= max;
-    }
-    // Helper function to classify particle detection
-    int classify_particle_via_mass(double mass);
     
 } // namespace DetectorUtils
-
 
 
 namespace ParticleListUtils 
@@ -54,6 +53,7 @@ namespace ParticleListUtils
     // function to choose a random particle
     std::unique_ptr<Particle> choose_random_particle();
 } // namespace ParticleListUtils
+
 
 namespace MathUtils {
     // Lambda function to calculate invariant mass squared
@@ -70,4 +70,12 @@ namespace MathUtils {
     inline auto roundToResolution = [](double value, double resolution) -> double {
         return std::round(value / resolution) * resolution;
     };
+
+    // Template function to check if a value is within a range
+    // Must be implemented in header file
+    template <typename T>
+    bool check_value_in_range(T value, T min, T max)
+    {
+        return value >= min && value <= max;
+    }
 } // namespace MathUtils

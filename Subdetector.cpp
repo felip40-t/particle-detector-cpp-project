@@ -64,14 +64,14 @@ void SubDetector::print() const
 {
     std::cout << "Sub-detector: " << name << std::endl;
     std::cout << "Efficiency: " << efficiency << std::endl;
-    std::cout << "Resolution: " << resolution << std::endl;
-    std::cout << "Uncertainty: " << uncertainty << std::endl;
+    std::cout << "Resolution: " << resolution << " MeV" << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << "%" << std::endl;
 }
 
 // Setters for efficiency, resolution, and uncertainty
 void SubDetector::set_efficiency(double efficiency)
 {
-    if (DetectorUtils::check_value_in_range(efficiency, 0.0, 1.0)) 
+    if (MathUtils::check_value_in_range(efficiency, 0.0, 1.0)) 
     {
         this->efficiency = efficiency;
     } 
@@ -84,7 +84,7 @@ void SubDetector::set_efficiency(double efficiency)
 
 void SubDetector::set_resolution(double resolution)
 {
-    if (DetectorUtils::check_value_in_range(resolution, 0.0, std::numeric_limits<double>::infinity())) 
+    if (MathUtils::check_value_in_range(resolution, 0.0, std::numeric_limits<double>::infinity())) 
     {
         this->resolution = resolution;
     } 
@@ -97,7 +97,7 @@ void SubDetector::set_resolution(double resolution)
 
 void SubDetector::set_uncertainty(double uncertainty)
 {
-    if (DetectorUtils::check_value_in_range(uncertainty, 0.0, std::numeric_limits<double>::infinity())) 
+    if (MathUtils::check_value_in_range(uncertainty, 0.0, std::numeric_limits<double>::infinity())) 
     {
         this->uncertainty = uncertainty;
     } 

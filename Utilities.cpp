@@ -28,18 +28,31 @@ void help_menu()
     std::cout << "This program simulates a particle detector.\n\n";
     std::cout << "You have a main detector composed of sub-detectors.\n";
     std::cout << "You can add or remove sub-detectors, and each sub-detector can detect different\nquantities and particles.\n";
+    std::cout << "If you add a sub-detector that already exists in the detector, it will be replaced.\n";
     std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
     std::cout << "You can set these parameters when adding a sub-detector.\n";
     std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
     std::cout << "You also have a list of particles that will be detected.\n";
     std::cout << "You can add or remove particles from the list.\n";
-    std::cout << "When adding a particle, you can choose a specific particle or a random one.\n\n";
+    std::cout << "When adding a particle, you can choose a specific particle or a random one. It will be generated with a random momentum.\n\n";
     std::cout << "Then, by choosing to detect the particles, the program will simulate the detection process.\n";
     std::cout << "The program will attempt to reconstruct the four-momentum of the detected particles.\n";
-    std::cout << "If the invariant mass is negative, it means the four-momentum is unphysical.\n";
-    std::cout << "This usually happens when the resolution and uncertainty of the sub-detectors are too high\nfor the given particle.\n\n";
+    std::cout << "If the resolution and uncertainty of the sub-detectors are too high, the reconstructed four-momentum\n";
+    std::cout << "may be incorrect. This means that the invariant mass of the particle may be incorrect, or \n";
+    std::cout << "you may get an error message. Try changing the resolution and uncertainty of the sub-detectors.\n";
     std::cout << "Check the README.md file for more information on the particles.\n";
     std::cout << "===================================================\n";
+}
+
+void subdetector_menu()
+{
+    std::cout << "===================================================\n";
+    std::cout << "Sub-detector menu:\n";
+    std::cout << "===================================================\n";
+    std::cout << "1. Tracker\n";
+    std::cout << "2. Muon Chamber\n";
+    std::cout << "3. Hadron Calorimeter\n";
+    std::cout << "4. EM Calorimeter\n";
 }
 
 bool check_string_to_int(const std::string& str) 
@@ -118,6 +131,59 @@ namespace DetectorUtils
         }
     }
 
+    int check_number_of_technology(std::string technology)
+    {
+        while (true)
+        {
+            std::cout << "Enter number of " << technology << ": ";
+            std::string input;
+            std::cin >> input;
+            if (check_string_to_int(input))
+            {
+                int num_of_technology = std::stoi(input);
+                if (num_of_technology > 0)
+                {
+                    return num_of_technology;
+                }
+                else
+                    std::cout << "Invalid number of " << technology << ". Please enter a positive integer.\n";
+            }
+            else
+            {
+                std::cout << "Invalid input. Please enter a positive integer.\n";
+            }
+        }
+    }
+
+    std::string check_muon_chamber_technology()
+    {
+        while (true)
+        {
+            muon_chamber_menu();
+            std::cout << "Enter choice: ";
+            std::string input;
+            std::cin >> input;
+            if (check_string_to_int(input))
+            {
+                int choice = std::stoi(input);
+                switch (choice)
+                {
+                    case 1: return "DTs";
+                    case 2: return "CSCs";
+                    case 3: return "RPCs";
+                    case 4: return "GEMs";
+                    default:
+                        std::cout << "Invalid choice. Please enter a number between 1 and 4.\n";
+                        break;
+                }
+            }
+            else
+            {
+                std::cout << "Invalid input. Please enter a number.\n";
+            }
+        }
+    }
+
     void tracker_material_menu()
     {
         std::cout << "Choose tracker material:\n";
@@ -125,6 +191,15 @@ namespace DetectorUtils
         std::cout << "2. Silicon strips\n";
         std::cout << "3. TPCs\n";
         std::cout << "4. Scintillator\n";
+    }
+
+    void muon_chamber_menu()
+    {
+        std::cout << "Choose muon chamber technology:\n";
+        std::cout << "1. DTs\n";
+        std::cout << "2. CSCs\n";
+        std::cout << "3. RPCs\n";
+        std::cout << "4. GEMs\n";
     }
 
     double check_input_in_range(const std::string& prompt, double min, double max)
@@ -160,56 +235,13 @@ namespace DetectorUtils
     // Check resolution is positive
     double check_resolution()
     {
-        return check_input_in_range("Enter resolution: ", 0, std::numeric_limits<double>::infinity());
+        return check_input_in_range("Enter resolution (MeV): ", 0, std::numeric_limits<double>::infinity());
     }
 
     // Check uncertainty is positive
     double check_uncertainty()
     {
-        return check_input_in_range("Enter uncertainty: ", 0, std::numeric_limits<double>::infinity());
-    }
-
-
-    // Classify particle based on mass and using ParticleInfo map
-    // Only used for charged hadrons, other particles can be inferred by track
-    // check if within 10% of mass
-    int classify_particle_via_mass(double mass)
-    {
-        // Lambda function to check if mass is within 10% of target mass
-        auto is_within_10_percent = [](double mass, double target_mass) {
-            return (mass > target_mass * 0.9 && mass < target_mass * 1.1);
-        };
-
-        // List of particle types to check against
-        std::vector<ParticleInfo::ParticleType> candidates = {
-            ParticleInfo::ParticleType::PROTON,
-            ParticleInfo::ParticleType::PION_PLUS,
-            ParticleInfo::ParticleType::KAON_PLUS,
-        };
-
-        // Loop through all candidate particles
-        for (const auto& type : candidates)
-        {
-            double target_mass = ParticleInfo::get_particle_properties(type).get_mass();
-            if (is_within_10_percent(mass, target_mass))
-            {
-                if (type == ParticleInfo::ParticleType::PROTON)
-                {
-                    return 1; // Proton
-                }
-                else if (type == ParticleInfo::ParticleType::PION_PLUS)
-                {
-                    return 2; // Pion+
-                }
-                else if (type == ParticleInfo::ParticleType::KAON_PLUS)
-                {
-                    return 3; // Kaon+
-                }
-            }
-        }
-
-        // If no match is found, return 0
-        return 0;
+        return check_input_in_range("Enter uncertainty (%): ", 0, 100);
     }
 
 } // namespace DetectorUtils

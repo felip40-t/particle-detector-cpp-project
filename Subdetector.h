@@ -12,7 +12,7 @@ class SubDetector
         string name; // Sub-detector name
         double efficiency; // Efficiency of the sub-detector
         double resolution; // Resolution of the sub-detector
-        double uncertainty; // Uncertainty in measurements (0 for perfect detector)
+        double uncertainty; // Uncertainty in measurements as a percentage (0 for perfect detector)
 
         // Default constructor
         SubDetector();

@@ -7,7 +7,7 @@ class Tracker : public SubDetector
 {
     protected:
         int layers; // Number of layers in the tracker
-        string material; // Material used in the tracker
+        std::string material; // Material used in the tracker
 
     public:
         // Destructor

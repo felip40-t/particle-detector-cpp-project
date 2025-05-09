@@ -18,6 +18,9 @@ class ParticleList
         // Add a particle to the list
         void add_particle();
 
+        // Add a custom particle to the list
+        void add_custom_particle(std::unique_ptr<Particle>&& particle);
+
         // Remove a particle from the list
         void remove_particle();
 
