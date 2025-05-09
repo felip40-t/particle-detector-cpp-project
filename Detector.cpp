@@ -161,25 +161,40 @@ void Detector::detect(const Particle& particle) const
 
     // If both EM calorimeter and tracker detect a particle, then it is an electron or positron
     if (measurement.em_calorimeter && measurement.track)
-        DetectorHelpers::report_electron(particle, measurement);
+        DetectorHelpers::report_electron(measurement);
     // If both hadron calorimeter and tracker detect a particle, then it is a charged hadron
     else if (measurement.track && measurement.hadron_calorimeter)
-        DetectorHelpers::report_charged_hadron(particle, measurement);
+        DetectorHelpers::report_charged_hadron(measurement);
     // If both only hadron calorimeter detects a particle, then it is a neutral hadron
     else if (measurement.hadron_calorimeter)
-        DetectorHelpers::report_neutral_hadron(particle, measurement);
+        DetectorHelpers::report_neutral_hadron(measurement);
     // If only muon chamber detects a particle, then it is a muon or antimuon
     else if (measurement.muon_chamber)
-        DetectorHelpers::report_muon(particle, measurement);
+        DetectorHelpers::report_muon(measurement);
     // If only EM calorimeter detects a particle, then it is a photon
     else if (measurement.em_calorimeter)
-        DetectorHelpers::report_photon(particle, measurement);
+        DetectorHelpers::report_photon(measurement);
+    // If only detected in tracker
+    else if (measurement.track)
+        DetectorHelpers::report_unknown(measurement);
     // Check if nothing was detected - neutrino
     else if (!measurement.track && !measurement.em_calorimeter && !measurement.hadron_calorimeter && !measurement.muon_chamber)
-        DetectorHelpers::report_neutrino(particle, measurement);
-    // Else - if only detected in tracker
-    else
-        DetectorHelpers::report_unknown(particle, measurement);
+    {
+        // Only report neutrino if all types of subdetectors exist
+        if (DetectorHelpers::has_all_subdetector_types(subdetectors))
+        {
+            DetectorHelpers::report_neutrino();
+        }
+        else
+        {
+            std::cout << "No sub-detectors detected the particle, but not all types of sub-detectors are present.\n";
+            std::cout << "Cannot confirm this particle.\n";
+        }
+    }
+    
+    // Print true particle properties once at the end
+    std::cout << "\nTrue particle properties:\n";
+    particle.print_data();
 }
 
 
@@ -228,7 +243,7 @@ namespace DetectorHelpers
     }
 
     // Helpers to report the detection of each particle
-    void report_electron(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_electron(const SubDetectorInfo::Measurement& measurement)
     {
         // Reconstruct 4-momentum using energy and momentum 
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
@@ -251,11 +266,9 @@ namespace DetectorHelpers
         }
         std::cout << "Four momentum measured:\n";
         four_momentum.print();
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_charged_hadron(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_charged_hadron(const SubDetectorInfo::Measurement& measurement)
     {
         FourMomentum four_momentum = reconstruct(measurement.energy, measurement.momentum[0], measurement.momentum[1], measurement.momentum[2]);
         double inv_mass_sqr = four_momentum * four_momentum;
@@ -310,18 +323,14 @@ namespace DetectorHelpers
         }
         std::cout << "Four momentum measured:\n";
         four_momentum.print();
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_neutral_hadron(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_neutral_hadron(const SubDetectorInfo::Measurement& measurement)
     {
         std::cout << "Neutral hadron detected with energy: " << measurement.energy << " MeV\n";
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_muon(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_muon(const SubDetectorInfo::Measurement& measurement)
     {
         // Reconstruct 4-momentum using mass and momentum,
         // since muon mass is known
@@ -337,32 +346,54 @@ namespace DetectorHelpers
         }
         std::cout << "Four momentum measured:\n";
         four_momentum.print();
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_photon(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_photon(const SubDetectorInfo::Measurement& measurement)
     {
         // Reconstruct 4-momentum using only energy
         std::cout << "Photon detected with energy: " << measurement.energy << " MeV\n";
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_neutrino(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_neutrino()
     {
         std::cout << "No sub-detectors detected the particle. Neutrino passed through" << std::endl;
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
     }
 
-    void report_unknown(const Particle& particle, const SubDetectorInfo::Measurement& measurement)
+    void report_unknown(const SubDetectorInfo::Measurement& measurement)
     {
         std::cout << "Particle detected in Tracker but not classified.\n";
         std::cout << "Measured momentum:\n";
-        std::cout << "( " << measurement.momentum[0] << ", " << measurement.momentum[1] << ", " << measurement.momentum[2] << ")\n";
-        std::cout << "True four momentum:\n";
-        particle.get_four_momentum().print();
+        std::cout << "(" << measurement.momentum[0] << ", " << measurement.momentum[1] << ", " << measurement.momentum[2] << ")\n";
+    }
+
+    // Helper function to check if all types of subdetectors exist
+    bool has_all_subdetector_types(const std::vector<std::unique_ptr<SubDetector>>& subdetectors)
+    {
+        bool has_tracker = false;
+        bool has_muon_chamber = false;
+        bool has_hadron_calorimeter = false;
+        bool has_em_calorimeter = false;
+
+        for (const auto& subdetector : subdetectors)
+        {
+            switch (subdetector->get_type())
+            {
+                case SubDetectorInfo::SubDetectorType::Tracker:
+                    has_tracker = true;
+                    break;
+                case SubDetectorInfo::SubDetectorType::MuonChamber:
+                    has_muon_chamber = true;
+                    break;
+                case SubDetectorInfo::SubDetectorType::HadronCalorimeter:
+                    has_hadron_calorimeter = true;
+                    break;
+                case SubDetectorInfo::SubDetectorType::EMCalorimeter:
+                    has_em_calorimeter = true;
+                    break;
+            }
+        }
+
+        return has_tracker && has_muon_chamber && has_hadron_calorimeter && has_em_calorimeter;
     }
 
 } // namespace DetectorHelpers

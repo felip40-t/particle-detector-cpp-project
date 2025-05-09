@@ -47,13 +47,16 @@ namespace DetectorHelpers
     // Helper function to classify particle detection
     int classify_particle_via_mass(double mass);
 
+    // Helper function to check if all types of subdetectors exist
+    bool has_all_subdetector_types(const std::vector<std::unique_ptr<SubDetector>>& subdetectors);
+
     // Helpers to report the detection of each particle
-    void report_electron(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_charged_hadron(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_neutral_hadron(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_muon(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_neutrino(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_photon(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
-    void report_unknown(const Particle& particle, const SubDetectorInfo::Measurement& measurement);
+    void report_electron(const SubDetectorInfo::Measurement& measurement);
+    void report_charged_hadron(const SubDetectorInfo::Measurement& measurement);
+    void report_neutral_hadron(const SubDetectorInfo::Measurement& measurement);
+    void report_muon(const SubDetectorInfo::Measurement& measurement);
+    void report_neutrino();
+    void report_photon(const SubDetectorInfo::Measurement& measurement);
+    void report_unknown(const SubDetectorInfo::Measurement& measurement);
 }
 
