@@ -5,9 +5,8 @@
 
 ## Abstract
 
-This program simulates a particle detector by composing multiple sub-detectors into a main detector object. A list of Standard Model particles is generated and passed through this detector system.
+This project simulates the detection of particles in a CMS-like detector using a modular C++ system. It supports the addition of new sub-detectors and particles, and includes a user interface with input validation, as well as a manual testing mode via the `particle_detector.cpp` file. The simulation models detector effects such as efficiency, resolution, and uncertainty. Each sub-detector measures specific properties—energy, momentum, and charge—and aggregated measurements improve accuracy. A range of Standard Model particles is supported, with invariant mass reconstruction when enough data is available. The program uses object-oriented design with inheritance, polymorphism, and controlled instantiation, along with templates, lambda functions, enumerators, STL containers, and smart pointers. Potential improvements include simulating particle interactions and decays.
 
-Each sub-detector attempts to detect the particle and measure its properties (energy, momentum, charge sign) based on its design. If enough measurements are gathered, the system reconstructs the particle's four-momentum and calculates its **invariant mass**.
 
 ### Features:
 - Particle creation from a predefined list of Standard Model particles.
@@ -35,7 +34,7 @@ The main program entry point is `particle_detector.cpp` in the root directory.
 
 ## Sub-Detectors
 
-- **Tracker**: Measures momentum and charge of **charged particles**.
+- **Tracker**: Measures momentum and charge of **charged particles** (except for **muons/antimuons**, for simplicity).
 - **EMCalorimeter**: Measures energy of **electrons/positrons** and **photons**.
 - **HadronCalorimeter**: Measures energy of **hadrons**.
 - **MuonChamber**: Measures momentum of **muons/antimuons**.
