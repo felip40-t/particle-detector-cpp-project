@@ -30,27 +30,7 @@ void Detector::add_subdetector()
         else
             std::cout << "Invalid input. Please enter a number.\n";
     }
-    
-    // Check if sub-detector already exists
-    // and replace it with the new one
-    SubDetectorInfo::SubDetectorType new_type;
-    switch (choice)
-    {
-        case 1: new_type = SubDetectorInfo::SubDetectorType::Tracker; break;
-        case 2: new_type = SubDetectorInfo::SubDetectorType::MuonChamber; break;
-        case 3: new_type = SubDetectorInfo::SubDetectorType::HadronCalorimeter; break;
-        case 4: new_type = SubDetectorInfo::SubDetectorType::EMCalorimeter; break;
-    }
-
-    for (size_t i = 0; i < subdetectors.size(); ++i)
-    {
-        if (subdetectors[i]->get_type() == new_type)
-        {
-            std::cout << "Chosen sub-detector already exists. Replacing it...\n";
-            remove_subdetector(i);
-        }
-    }
-
+   
     // Check efficiency
     double efficiency;
     efficiency = DetectorUtils::check_efficiency();

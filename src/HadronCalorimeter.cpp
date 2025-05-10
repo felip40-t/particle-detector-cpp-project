@@ -27,12 +27,23 @@ void HadronCalorimeter::detect(const Particle& particle, SubDetectorInfo::Measur
         double random_value = distribution(generator);
         if (random_value < efficiency)
         {
-            measurement.hadron_calorimeter = true;
             std::cout << "Particle detected in " << name << std::endl;
             double uncertainty_value = std::abs(particle.get_four_momentum().get_component(0)) * (uncertainty / 100.0);
             std::normal_distribution<double> energy_distribution(0.0, uncertainty_value);
             double smeared_energy = particle.get_four_momentum().get_component(0) + energy_distribution(generator);
-            measurement.energy = MathUtils::roundToResolution(smeared_energy, resolution);
+            double new_measurement = MathUtils::roundToResolution(smeared_energy, resolution);
+            std::cout << "Energy measurement: " << new_measurement << " MeV" << std::endl;
+            if (measurement.hadron_calorimeter == false) // no previous measurement
+            {
+                measurement.energy = new_measurement;
+            }
+            else // previous measurement exists, so average the two measurements
+            {
+                double previous_measurement = measurement.energy;
+                double average_measurement = (previous_measurement + new_measurement) / 2.0;
+                measurement.energy = average_measurement;
+            }
+            measurement.hadron_calorimeter = true;
         }
     }
 }

@@ -50,10 +50,8 @@ void Tracker::print() const
 void Tracker::detect(const Particle& particle, SubDetectorInfo::Measurement& measurement)
 {
     // Simulate detection
-    // Check if particle is charged and the muon chamber 
-    // has not already detected it in order to avoid overwriting
-    // the muon chamber's measurement
-    if (particle.get_properties().get_charge() != 0 && !measurement.muon_chamber)
+    // Check if particle is charged and not a muon
+    if (particle.get_properties().get_charge() != 0 && !dynamic_cast<const Muon*>(&particle))
     {
         // Simulate detection with efficiency
         static std::random_device random_device;
@@ -62,19 +60,36 @@ void Tracker::detect(const Particle& particle, SubDetectorInfo::Measurement& mea
         double random_value = distribution(generator);
         if (random_value < efficiency)
         {
-            measurement.track = true; // Set the track flag to true
-            measurement.charge = particle.get_properties().get_charge(); // Set the charge of the particle
-            
             std::cout << "Particle detected in " << name << std::endl;
-            // Simulate resolution smearing effect for each component of the particle's momentum
+            // Simulate uncertainty effect for each component of the particle's momentum
+            std::array<double, 3> new_measurement;
             for (int i = 1; i <= 3; ++i)
             {   
                 // generate normal distribution with mean = 0 and stddev = uncertainty% of the absolute momentum
                 double uncertainty_value = std::abs(particle.get_four_momentum().get_component(i)) * (uncertainty / 100.0);
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty_value);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                measurement.momentum[i - 1] = MathUtils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
+                new_measurement[i - 1] = MathUtils::roundToResolution(smeared_value, resolution);
+                
+                if (measurement.track == false) // no previous measurement by another tracker
+                {
+                    measurement.momentum[i - 1] = new_measurement[i - 1]; // Store the smeared momentum value
+                }
+                else // previous measurement exists, so average the two measurements
+                {
+                    double previous_measurement = measurement.momentum[i - 1];
+                    double average_measurement = (previous_measurement + new_measurement[i - 1]) / 2.0;
+                    measurement.momentum[i - 1] = average_measurement; // Store the averaged momentum value
+                }
             }
+            std::cout << "Momentum measurement: (";
+            for (int i = 0; i < 3; ++i) {
+                std::cout << new_measurement[i];
+                if (i < 2) std::cout << ", ";
+            }
+            std::cout << ")" << std::endl;
+            measurement.track = true; // Set the track flag to true
+            measurement.charge = particle.get_properties().get_charge(); // Set the charge of the particle
         }
     }
 }

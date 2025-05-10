@@ -51,19 +51,36 @@ void MuonChamber::detect(const Particle& particle, SubDetectorInfo::Measurement&
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         double random_value = distribution(generator);
         if (random_value < efficiency)
-        {
-            measurement.muon_chamber = true; // Set the measurement flag for MuonChamber
-            measurement.charge = particle.get_properties().get_charge();
+        {            
             std::cout << "Particle detected in " << name << std::endl;
             // Simulate resolution smearing effect for each component of the particle's momentum
+            std::array<double, 3> new_measurement;
             for (int i = 1; i <= 3; ++i)
             {
-                // generate normal distribution with mean = 0 and stddev = uncertainty% of the absolute momentum
                 double uncertainty_value = std::abs(particle.get_four_momentum().get_component(i)) * (uncertainty / 100.0);
                 std::normal_distribution<double> normal_distribution(0.0, uncertainty_value);
                 double smeared_value = particle.get_four_momentum().get_component(i) + normal_distribution(generator);
-                measurement.momentum[i - 1] = MathUtils::roundToResolution(smeared_value, resolution); // Store the smeared momentum value
+                new_measurement[i - 1] = MathUtils::roundToResolution(smeared_value, resolution);
+
+                if (measurement.muon_chamber == false) // no previous measurement
+                {
+                    measurement.momentum[i - 1] = new_measurement[i - 1]; // Store the smeared momentum value
+                }
+                else // previous measurement exists, so average the two measurements
+                {
+                    double previous_measurement = measurement.momentum[i - 1];
+                    double average_measurement = (previous_measurement + new_measurement[i - 1]) / 2.0;
+                    measurement.momentum[i - 1] = average_measurement; // Store the averaged momentum value
+                }
             }
+            std::cout << "Momentum measurement: (";
+            for (int i = 0; i < 3; ++i) {
+                std::cout << new_measurement[i];
+                if (i < 2) std::cout << ", ";
+            }
+            std::cout << ")" << std::endl;
+            measurement.muon_chamber = true; // Set the measurement flag for MuonChamber
+            measurement.charge = particle.get_properties().get_charge();
         }
     }
 }

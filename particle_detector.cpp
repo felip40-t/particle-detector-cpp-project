@@ -129,10 +129,11 @@ int main() {
     
     std::cout << "\n=== Setting up CMS-like detector ===\n";
     Detector detector;
-    detector.add_subdetector(std::make_unique<Tracker>());
-    detector.add_subdetector(std::make_unique<EMCalorimeter>());
-    detector.add_subdetector(std::make_unique<HadronCalorimeter>());
-    detector.add_subdetector(std::make_unique<MuonChamber>());
+    // Input parameters: efficiency, resolution, uncertainty, (layers), (material) for tracker and muon chamber
+    detector.add_subdetector(std::make_unique<Tracker>(1, 0.01, 0.05, 10, "TPCs"));
+    detector.add_subdetector(std::make_unique<EMCalorimeter>(1, 0.01, 0.05));
+    detector.add_subdetector(std::make_unique<HadronCalorimeter>(1, 0.01, 0.05));
+    detector.add_subdetector(std::make_unique<MuonChamber>(1, 0.01, 0.05, 256, "GEMs"));
     detector.print();
 
     std::cout << "\n=== Creating particle list ===\n";
