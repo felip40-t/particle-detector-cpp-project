@@ -70,15 +70,7 @@ namespace ParticleInfo
             {ParticleType::KAON_0, ParticleProperties(ParticleType::KAON_0, 497.6, 0.0, "Kaon0")},
             {ParticleType::PHOTON, ParticleProperties(ParticleType::PHOTON, 0.0, 0.0, "Photon")}
         };
-        auto it = particle_map.find(type);
-        if (it == particle_map.end())
-        {
-            return particle_map.at(ParticleType::PHOTON); // Return default particle properties if type not found
-        }
-        else
-        {
-            return particle_map.at(type);
-        }
+        return particle_map.at(type);
     }
 
 }

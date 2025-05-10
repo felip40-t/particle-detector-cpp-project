@@ -4,11 +4,6 @@
 
 #include "Detector.h"
 #include "ParticleList.h"
-
-#include "Electron.h"
-#include "Muon.h"
-#include "Photon.h"
-#include "Hadron.h"
 #include "Utilities.h"
 
 int main() {
@@ -26,15 +21,15 @@ int main() {
     while (!manual_testing)
     {
         // Display menu options
-        show_menu();
+        DetectorUtils::show_menu();
         std::string choice{};
         std::cout << "Enter your choice: ";
         std::cin >> choice;
-        if (!check_string_to_int(choice)) 
+        if (!MathUtils::check_string_to_int(choice)) 
         {
             if (choice == "?")
             {
-                help_menu();
+                DetectorUtils::help_menu();
                 continue;
             }
             std::cout << "Invalid input. Please enter a number.\n";
@@ -209,8 +204,8 @@ int main() {
     (p1 + p2).print();
     // Set the x and y momentum of the positron to another value to show that the z component 
     // and energy are conserved -- the mass of the positron doesn't change
-    p2.set_px(1238.0);
-    p2.set_py(964.0);
+    p2.set_momentum_component(1, 1238.0);
+    p2.set_momentum_component(2, 964.0);
     std::cout << "Positron four-momentum after changing x and y components:\n";
     p2.print();
     std::cout << "Invariant mass of positron: " << sqrt(p2 * p2) << " MeV/c^2\n";

@@ -6,8 +6,6 @@ using std::string;
 
 namespace ParticleInfo
 {
-
-    // Enumerator class for particle types
     enum class ParticleType
     {
         NEUTRINO,

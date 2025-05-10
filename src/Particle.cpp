@@ -59,5 +59,5 @@ void Particle::print_data() const
         std::cout << four_momentum->get_component(i);
         if (i < 3) std::cout << ", ";
     }
-    std::cout << "]\n";
+    std::cout << "] MeV/c" << std::endl;
 }

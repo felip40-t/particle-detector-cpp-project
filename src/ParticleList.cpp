@@ -6,7 +6,7 @@ void ParticleList::add_particle()
     std::cout << "Please enter the number of your chosen particle: ";
     std::string particle_choice;
     std::cin >> particle_choice;
-    if (check_string_to_int(particle_choice))
+    if (MathUtils::check_string_to_int(particle_choice))
         {
             int choice = std::stoi(particle_choice);
             for (int i = 1 ; i < 15 ; i++)
@@ -38,7 +38,7 @@ void ParticleList::remove_particle()
     std::cout << "Enter index of particle to remove: ";
     std::string index_input;
     std::cin >> index_input;
-    if (check_string_to_int(index_input)) 
+    if (MathUtils::check_string_to_int(index_input)) 
     {
         size_t index = std::stoi(index_input);
         if (index < particles.size()) 

@@ -11,7 +11,7 @@ void Detector::add_subdetector(std::unique_ptr<SubDetector> subdetector)
 // Get user to add subdetector
 void Detector::add_subdetector()
 {
-    subdetector_menu();
+    DetectorUtils::subdetector_menu();
     // Check choice
     int choice;
     while (true)
@@ -19,7 +19,7 @@ void Detector::add_subdetector()
         std::cout << "Enter choice: ";
         std::string input;
         std::cin >> input;
-        if (check_string_to_int(input))
+        if (MathUtils::check_string_to_int(input))
         {
             choice = std::stoi(input);
             if (choice >= 1 && choice <= 4)
@@ -102,7 +102,7 @@ void Detector::remove_subdetector()
     std::string index_input;
     std::cin >> index_input;
 
-    if (check_string_to_int(index_input)) 
+    if (MathUtils::check_string_to_int(index_input)) 
     {
         size_t index = std::stoi(index_input);
         remove_subdetector(index);

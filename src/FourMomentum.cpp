@@ -90,49 +90,27 @@ double FourMomentum::get_component(int index) const
     return four_momentum[index];
 }
 
-// Setters for momentum components
-void FourMomentum::set_px(double px) 
+// Setter for momentum components
+void FourMomentum::set_momentum_component(int index, double value) 
 {
-    double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
-    // Ensure px is finite and real
-    if (std::isnan(px) || std::isinf(px))
+    // Ensure index is valid (1 for px, 2 for py, 3 for pz)
+    if (index < 1 || index > 3)
     {
-        std::cerr << "FourMomentum: px must be a finite, real number." << std::endl;
-        std::cerr << "Leaving px unchanged." << std::endl;
+        std::cerr << "FourMomentum: Invalid momentum component index. Must be 1 (px), 2 (py), or 3 (pz)." << std::endl;
         return;
     }
-    four_momentum[1] = px;
-    // Calculate the energy based on the new momentum
-    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
-}
 
-void FourMomentum::set_py(double py) 
-{
-    double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
-    // Ensure py is finite and real
-    if (std::isnan(py) || std::isinf(py))
+    // Ensure value is finite and real
+    if (std::isnan(value) || std::isinf(value))
     {
-        std::cerr << "FourMomentum: py must be a finite, real number." << std::endl;
-        std::cerr << "Leaving py unchanged." << std::endl;
+        std::cerr << "FourMomentum: Momentum component must be a finite, real number." << std::endl;
+        std::cerr << "Leaving component unchanged." << std::endl;
         return;
     }
-    four_momentum[2] = py;
-    // Calculate the energy based on the new momentum
-    four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
-}
 
-void FourMomentum::set_pz(double pz) 
-{
     double rest_mass_sqrd = MathUtils::invariant_mass_squared(four_momentum[0], four_momentum[1], four_momentum[2], four_momentum[3]);
-    // Ensure pz is finite and real
-    if (std::isnan(pz) || std::isinf(pz))
-    {
-        std::cerr << "FourMomentum: pz must be a finite, real number." << std::endl;
-        std::cerr << "Leaving pz unchanged." << std::endl;
-        return;
-    }
-    four_momentum[3] = pz;
-    // Calculate the energy based on the new momentum 
+    four_momentum[index] = value;
+    // Calculate the energy based on the new momentum
     four_momentum[0] = sqrt(MathUtils::momentum_squared(four_momentum[1], four_momentum[2], four_momentum[3]) + rest_mass_sqrd);
 }
 
@@ -199,10 +177,6 @@ FourMomentum reconstruct(double E, double px, double py, double pz)
         px = py = pz = 0.0;
     }
     return FourMomentum(
-        E,
-        px,
-        py,
-        pz,
-        RawTag{} // Use the private constructor
+        E, px, py, pz, RawTag{} // Use the private constructor
     );
 }

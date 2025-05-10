@@ -1,83 +1,61 @@
 #include "Utilities.h"
 
-void show_menu() 
+namespace DetectorUtils 
 {
-    std::cout << "===================================================\n";
-    std::cout << "Particle Detector Simulation Menu:\n";
-    std::cout << "===================================================\n";
-    std::cout << "Choose an option:\n";
-    std::cout << "?. Help\n";
-    std::cout << "1. Add a sub-detector\n";
-    std::cout << "2. Remove a sub-detector\n";
-    std::cout << "3. Clear all sub-detectors\n";
-    std::cout << "4. Print detector information\n";
-    std::cout << "5. Add a particle\n";
-    std::cout << "6. Remove a particle\n";
-    std::cout << "7. Clear all particles\n";
-    std::cout << "8. Print particles' information\n";
-    std::cout << "9. Detect particles\n";
-    std::cout << "0. Exit\n";
-}
-
-// Help menu to explain the options
-void help_menu()
-{
-    std::cout << "===================================================\n";
-    std::cout << "Help\n";
-    std::cout << "===================================================\n";
-    std::cout << "This program simulates a particle detector.\n\n";
-    std::cout << "You have a main detector composed of sub-detectors.\n";
-    std::cout << "You can add or remove sub-detectors, and each sub-detector can detect different\nquantities and particles.\n";
-    std::cout << "If you add a sub-detector that already exists in the detector, it will be replaced.\n";
-    std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
-    std::cout << "You can set these parameters when adding a sub-detector.\n";
-    std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
-    std::cout << "You also have a list of particles that will be detected.\n";
-    std::cout << "You can add or remove particles from the list.\n";
-    std::cout << "When adding a particle, you can choose a specific particle or a random one. It will be generated with a random momentum.\n\n";
-    std::cout << "Then, by choosing to detect the particles, the program will simulate the detection process.\n";
-    std::cout << "The program will attempt to reconstruct the four-momentum of the detected particles.\n";
-    std::cout << "If the resolution and uncertainty of the sub-detectors are too high, the reconstructed four-momentum\n";
-    std::cout << "may be incorrect. This means that the invariant mass of the particle may be incorrect, or \n";
-    std::cout << "you may get an error message. Try changing the resolution and uncertainty of the sub-detectors.\n";
-    std::cout << "Check the README.md file for more information on the particles.\n";
-    std::cout << "===================================================\n";
-}
-
-void subdetector_menu()
-{
-    std::cout << "===================================================\n";
-    std::cout << "Sub-detector menu:\n";
-    std::cout << "===================================================\n";
-    std::cout << "1. Tracker\n";
-    std::cout << "2. Muon Chamber\n";
-    std::cout << "3. Hadron Calorimeter\n";
-    std::cout << "4. EM Calorimeter\n";
-}
-
-bool check_string_to_int(const std::string& str) 
-{
-    // Check if string is an integer
-    for (char c : str) 
+    void show_menu() noexcept
     {
-        if (!isdigit(c)) 
-        {
-            return false;
-        }
+        std::cout << "===================================================\n";
+        std::cout << "Particle Detector Simulation Menu:\n";
+        std::cout << "===================================================\n";
+        std::cout << "Choose an option:\n";
+        std::cout << "?. Help\n";
+        std::cout << "1. Add a sub-detector\n";
+        std::cout << "2. Remove a sub-detector\n";
+        std::cout << "3. Clear all sub-detectors\n";
+        std::cout << "4. Print detector information\n";
+        std::cout << "5. Add a particle\n";
+        std::cout << "6. Remove a particle\n";
+        std::cout << "7. Clear all particles\n";
+        std::cout << "8. Print particles' information\n";
+        std::cout << "9. Detect particles\n";
+        std::cout << "0. Exit\n";
     }
-    return true;
-}
 
-bool check_string_to_double(const std::string& str) 
-{
-    // Check if string is a valid double
-    std::istringstream iss(str);
-    double val;
-    return !(iss >> val).fail() && iss.eof();  // Ensure a valid double and no extra characters exist
-}
+    void help_menu() noexcept
+    {
+        std::cout << "===================================================\n";
+        std::cout << "Help\n";
+        std::cout << "===================================================\n";
+        std::cout << "This program simulates a particle detector.\n\n";
+        std::cout << "You have a main detector composed of sub-detectors.\n";
+        std::cout << "You can add or remove sub-detectors, and each sub-detector can detect different\nquantities and particles.\n";
+        std::cout << "If you add a sub-detector that already exists in the detector, it will be replaced.\n";
+        std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
+        std::cout << "You can set these parameters when adding a sub-detector.\n";
+        std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
+        std::cout << "You also have a list of particles that will be detected.\n";
+        std::cout << "You can add or remove particles from the list.\n";
+        std::cout << "When adding a particle, you can choose a specific particle or a random one. It will be generated with a random momentum.\n\n";
+        std::cout << "Then, by choosing to detect the particles, the program will simulate the detection process.\n";
+        std::cout << "The program will attempt to reconstruct the four-momentum of the detected particles.\n";
+        std::cout << "If the resolution and uncertainty of the sub-detectors are too high, the reconstructed four-momentum\n";
+        std::cout << "may be incorrect. This means that the invariant mass of the particle may be incorrect, or \n";
+        std::cout << "you may get an error message. Try changing the resolution and uncertainty of the sub-detectors.\n";
+        std::cout << "Check the README.md file for more information on the particles.\n";
+        std::cout << "===================================================\n";
+    }
 
-namespace DetectorUtils
-{
+    void subdetector_menu() noexcept
+    {
+        std::cout << "===================================================\n";
+        std::cout << "Sub-detector menu:\n";
+        std::cout << "===================================================\n";
+        std::cout << "1. Tracker\n";
+        std::cout << "2. Muon Chamber\n";
+        std::cout << "3. Hadron Calorimeter\n";
+        std::cout << "4. EM Calorimeter\n";
+    }
+
     int check_layers()
     {
         while (true)
@@ -85,15 +63,14 @@ namespace DetectorUtils
             std::cout << "Enter number of layers: ";
             std::string input;
             std::cin >> input;
-            if (check_string_to_int(input))
+            if (MathUtils::check_string_to_int(input))
             {
                 int layers = std::stoi(input);
                 if (layers > 0)
                 {
                     return layers;
                 }
-                else
-                    std::cout << "Invalid number of layers. Please enter a positive integer.\n";
+                std::cout << "Invalid number of layers. Please enter a positive integer.\n";
             }
             else
             {
@@ -110,7 +87,7 @@ namespace DetectorUtils
             std::cout << "Enter choice: ";
             std::string input;
             std::cin >> input;
-            if (check_string_to_int(input))
+            if (MathUtils::check_string_to_int(input))
             {
                 int choice = std::stoi(input);
                 switch (choice)
@@ -131,22 +108,21 @@ namespace DetectorUtils
         }
     }
 
-    int check_number_of_technology(std::string technology)
+    int check_number_of_technology(const std::string& technology)
     {
         while (true)
         {
             std::cout << "Enter number of " << technology << ": ";
             std::string input;
             std::cin >> input;
-            if (check_string_to_int(input))
+            if (MathUtils::check_string_to_int(input))
             {
                 int num_of_technology = std::stoi(input);
                 if (num_of_technology > 0)
                 {
                     return num_of_technology;
                 }
-                else
-                    std::cout << "Invalid number of " << technology << ". Please enter a positive integer.\n";
+                std::cout << "Invalid number of " << technology << ". Please enter a positive integer.\n";
             }
             else
             {
@@ -163,7 +139,7 @@ namespace DetectorUtils
             std::cout << "Enter choice: ";
             std::string input;
             std::cin >> input;
-            if (check_string_to_int(input))
+            if (MathUtils::check_string_to_int(input))
             {
                 int choice = std::stoi(input);
                 switch (choice)
@@ -184,7 +160,7 @@ namespace DetectorUtils
         }
     }
 
-    void tracker_material_menu()
+    void tracker_material_menu() noexcept
     {
         std::cout << "Choose tracker material:\n";
         std::cout << "1. Silicon pixels\n";
@@ -193,7 +169,7 @@ namespace DetectorUtils
         std::cout << "4. Scintillator\n";
     }
 
-    void muon_chamber_menu()
+    void muon_chamber_menu() noexcept
     {
         std::cout << "Choose muon chamber technology:\n";
         std::cout << "1. DTs\n";
@@ -209,15 +185,14 @@ namespace DetectorUtils
             std::cout << prompt;
             std::string input;
             std::cin >> input;
-            if (check_string_to_double(input))
+            if (MathUtils::check_string_to_double(input))
             {
                 double value = std::stod(input);
                 if (value >= min && value <= max)
                 {
                     return value;
                 }
-                else
-                    std::cout << "Invalid input. Please enter a value within the correct limits.\n";
+                std::cout << "Invalid input. Please enter a value within the correct limits.\n";
             }
             else
             {
@@ -226,19 +201,16 @@ namespace DetectorUtils
         }
     }
 
-    // Check efficiency between 0 and 1
     double check_efficiency()
     {
         return check_input_in_range("Enter efficiency (0-1): ", 0, 1);
     }
 
-    // Check resolution is positive
     double check_resolution()
     {
         return check_input_in_range("Enter resolution (MeV): ", 0, std::numeric_limits<double>::infinity());
     }
 
-    // Check uncertainty is positive
     double check_uncertainty()
     {
         return check_input_in_range("Enter uncertainty (%): ", 0, 100);
@@ -246,9 +218,32 @@ namespace DetectorUtils
 
 } // namespace DetectorUtils
 
+namespace MathUtils 
+{
+    bool check_string_to_int(const std::string& str) 
+    {
+        // Check if string is an integer
+        for (char c : str) 
+        {
+            if (!isdigit(c)) 
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool check_string_to_double(const std::string& str) 
+    {
+        std::istringstream iss(str);
+        double val;
+        return !(iss >> val).fail() && iss.eof();  // Ensure a valid double and no extra characters exist
+    }
+} // namespace MathUtils
+
 namespace ParticleListUtils 
 {
-    void particle_menu()
+    void particle_menu() noexcept
     {
         std::cout << "=========================\n";
         std::cout << "Particle menu:\n";
@@ -299,9 +294,8 @@ namespace ParticleListUtils
     {
         static std::random_device rand_dev;
         static std::mt19937 generator(rand_dev());
-        std::uniform_int_distribution<int> distribution (1, 15);
-        int choice = distribution(generator);
-        return choose_particle(choice);
+        std::uniform_int_distribution<int> distribution(1, 15);
+        return choose_particle(distribution(generator));
     }
 
-} // namespace ParticleUtils
+} // namespace ParticleListUtils

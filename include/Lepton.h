@@ -32,4 +32,7 @@ class Lepton : public Particle
 
         // Override print function
         void print_data() const override;
+
+        // Get lepton number
+        int get_lepton_number() const { return lepton_number; }
 };
