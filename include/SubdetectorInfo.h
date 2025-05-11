@@ -21,17 +21,16 @@ namespace SubDetectorInfo
     const std::string& get_subdetector_names(SubDetectorType type);
 
     // Struct to hold measurement
-    
     struct Measurement
     {
-        double energy{0.0}; // Energy of the particle
-        std::array<double, 3> momentum {0.0, 0.0, 0.0}; // 3D momentum vector
-        double charge {0.0}; // Charge of the particle
+        double energy{0.0};
+        std::array<double, 3> momentum {0.0, 0.0, 0.0};
+        double charge {0.0};
 
-        bool track = false; // Flag to indicate if the measurement is from a tracker
-        bool em_calorimeter = false; // Flag to indicate if the measurement is from an EM calorimeter
-        bool hadron_calorimeter = false; // Flag to indicate if the measurement is from a hadron calorimeter
-        bool muon_chamber = false; // Flag to indicate if the measurement is from a muon chamber
+        bool track = false; // Flag for tracker
+        bool em_calorimeter = false; // Flag for EM calorimeter
+        bool hadron_calorimeter = false; // Flag for hadron calorimeter
+        bool muon_chamber = false; // Flag for muon chamber
 
         Measurement() = default; // Default constructor
     };

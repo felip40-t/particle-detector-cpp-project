@@ -8,14 +8,8 @@
 
 int main() {
 
-    // Create a Detector object
     Detector CMS_detector;
-
-    // Create a ParticleList object
     ParticleList particles;
-
-    // Create a Boolean variable to switch on and off the manual testing
-    // Set to true to run the manual testing
     bool manual_testing = false;
 
     while (!manual_testing)
@@ -116,8 +110,6 @@ int main() {
                 std::cout << "Detection complete.\n";
                 break;
             }
-            
-            // Default case for invalid input
             default:
                 std::cout << "Invalid choice. Please try again.\n";
         }
@@ -140,9 +132,8 @@ int main() {
     ParticleList particle_list;
 
     // Demonstrate particle-antiparticle pairs
-    std::cout << "\n--- Electron-Positron Pair ---\n";
-    Electron electron(0.0, 0.0, 10000.0);
-    Positron positron(0.0, 0.0, -10000.0);
+    Electron electron(0.0, 0.0, 100.0);
+    Positron positron(0.0, 0.0, -100.0);
     std::cout << "Electron properties:\n";
     electron.print_data();
     std::cout << "\nPositron properties:\n";
@@ -151,9 +142,8 @@ int main() {
     particle_list.add_custom_particle(std::make_unique<Positron>(positron));
 
     // Demonstrate muon-antimuon pair with different momenta
-    std::cout << "\n--- Muon-Antimuon Pair ---\n";
-    Muon muon(2341.0, 42.0, -123434.0);
-    Antimuon antimuon(-2341.0, -42.0, 123434.0);
+    Muon muon(2341.0, 42.0, -12343.0);
+    Antimuon antimuon(-2341.0, -42.0, 12343.0);
     std::cout << "Muon properties:\n";
     muon.print_data();
     std::cout << "\nAntimuon properties:\n";
@@ -192,24 +182,16 @@ int main() {
     particle_list.add_custom_particle(std::make_unique<Neutrino>(neutrino));
 
     // Demonstrate four-momentum operations
-    std::cout << "\n=== Four-Momentum Operations ===\n";
-    FourMomentum p1 = electron.get_four_momentum();
-    FourMomentum p2 = positron.get_four_momentum();
-    std::cout << "Electron four-momentum:\n";
-    p1.print();
-    std::cout << "Invariant mass of electron: " << sqrt(p1 * p1) << " MeV/c^2\n";
+    std::cout << "\n=== Four-Momentum Operations Example ===\n";
     std::cout << "Positron four-momentum:\n";
-    p2.print();
-    std::cout << "Invariant mass of positron: " << sqrt(p2 * p2) << " MeV/c^2\n";
-    std::cout << "Sum of four-momenta:\n";
-    (p1 + p2).print();
-    // Set the x and y momentum of the positron to another value to show that the z component 
-    // and energy are conserved -- the mass of the positron doesn't change
-    p2.set_momentum_component(1, 1238.0);
-    p2.set_momentum_component(2, 964.0);
+    positron.get_four_momentum().print();
+    std::cout << "Invariant mass of positron: " << sqrt(positron.get_four_momentum() * positron.get_four_momentum()) << " MeV/c^2\n";
+    // Set the x and y momentum
+    positron.set_four_momentum(1, 238.0);
+    positron.set_four_momentum(2, 964.0);
     std::cout << "Positron four-momentum after changing x and y components:\n";
-    p2.print();
-    std::cout << "Invariant mass of positron: " << sqrt(p2 * p2) << " MeV/c^2\n";
+    positron.get_four_momentum().print();
+    std::cout << "Invariant mass of positron: " << sqrt(positron.get_four_momentum() * positron.get_four_momentum()) << " MeV/c^2\n";
 
     // Detect all particles
     std::cout << "\n=== Particle Detection ===\n";

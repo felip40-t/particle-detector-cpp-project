@@ -29,7 +29,7 @@ void Detector::add_subdetector()
         }
         else
             std::cout << "Invalid input. Please enter a number.\n";
-    }
+    } 
    
     // Check efficiency
     double efficiency;
@@ -254,26 +254,25 @@ namespace DetectorHelpers
         double inv_mass_sqr = four_momentum * four_momentum;
         if (inv_mass_sqr < 0)
         {
-            std::cout << "Reconstructed four-momentum yields unphysical invariant mass.\n";
-            std::cout << "Try changing the resolution and uncertainty of the sub-detectors.\n";
+            std::cout << "Reconstructed four-momentum yields unphysical invariant mass.\nTry changing the resolution and uncertainty of the sub-detectors.\n";
             return;
         }
         double invariant_mass = sqrt(inv_mass_sqr);
         // Classify the particle using invariant mass
-        int particle_type = DetectorHelpers::classify_particle_via_mass(invariant_mass);
+        int particle_key = DetectorHelpers::classify_particle_via_mass(invariant_mass);
         // Check charge to see if it is a positive or negative hadron
         if (measurement.charge > 0)
         {
             // Check mass to classify
-            if (particle_type == 1)
+            if (particle_key == 1)
             {
                 std::cout << "Proton detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
             }
-            else if (particle_type == 2)
+            else if (particle_key == 2)
             {
                 std::cout << "Pion+ detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
             }
-            else if (particle_type == 3)
+            else if (particle_key == 3)
             {
                 std::cout << "Kaon+ detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
             }
@@ -284,15 +283,11 @@ namespace DetectorHelpers
         }
         else if (measurement.charge < 0)
         {
-            if (particle_type == 1)
-            {
-                std::cout << "Antiproton detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
-            }
-            else if (particle_type == 2)
+            if (particle_key == 2)
             {
                 std::cout << "Pion- detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
             }
-            else if (particle_type == 3)
+            else if (particle_key == 3)
             {
                 std::cout << "Kaon- detected with invariant mass: " << invariant_mass << " MeV/c^2\n";
             }

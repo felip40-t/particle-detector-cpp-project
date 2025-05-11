@@ -91,7 +91,7 @@ void MuonChamber::print() const
     std::cout << "Sub-detector: " << name << std::endl;
     std::cout << "Efficiency: " << efficiency << std::endl;
     std::cout << "Resolution: " << resolution << " MeV" << std::endl;
-    std::cout << "Uncertainty: " << uncertainty << " MeV" << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << "%" << std::endl;
     std::cout << "Technology: " << technology << std::endl;
     std::cout << "Number of " << technology << ": " << num_of_technology << std::endl;
 }

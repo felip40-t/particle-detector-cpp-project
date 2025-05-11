@@ -61,3 +61,9 @@ void Particle::print_data() const
     }
     std::cout << "] MeV/c" << std::endl;
 }
+
+void Particle::set_four_momentum(int index, double value)
+{
+    four_momentum->set_momentum_component(index, value);
+}
+

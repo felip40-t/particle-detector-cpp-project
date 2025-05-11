@@ -29,7 +29,8 @@ namespace DetectorUtils
         std::cout << "This program simulates a particle detector.\n\n";
         std::cout << "You have a main detector composed of sub-detectors.\n";
         std::cout << "You can add or remove sub-detectors, and each sub-detector can detect different\nquantities and particles.\n";
-        std::cout << "If you add a sub-detector that already exists in the detector, it will be replaced.\n";
+        std::cout << "If you add a sub-detector that already exists in the detector, then the measurements\n";
+        std::cout << "from the existing sub-detector will be averaged with the new measurements.\n";
         std::cout << "Each sub-detector has its own efficiency, resolution, and uncertainty.\n";
         std::cout << "You can set these parameters when adding a sub-detector.\n";
         std::cout << "Look through the README.md file for more information on the sub-detectors.\n\n";
@@ -42,6 +43,8 @@ namespace DetectorUtils
         std::cout << "may be incorrect. This means that the invariant mass of the particle may be incorrect, or \n";
         std::cout << "you may get an error message. Try changing the resolution and uncertainty of the sub-detectors.\n";
         std::cout << "Check the README.md file for more information on the particles.\n";
+        std::cout << "You can also run the program with the main file to manually test the detector.\n";
+        std::cout << "To do this, switch the boolean variable 'manual_testing' to true in the particle_detector.cpp file.\n";
         std::cout << "===================================================\n";
     }
 

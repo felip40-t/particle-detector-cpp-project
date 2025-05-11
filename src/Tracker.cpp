@@ -41,7 +41,7 @@ void Tracker::print() const
     std::cout << "Sub-detector: " << name << std::endl;
     std::cout << "Efficiency: " << efficiency << std::endl;
     std::cout << "Resolution: " << resolution << " MeV" << std::endl;
-    std::cout << "Uncertainty: " << uncertainty << " MeV" << std::endl;
+    std::cout << "Uncertainty: " << uncertainty << "%" << std::endl;
     std::cout << "Material: " << material << std::endl;
     std::cout << "Layers: " << layers << std::endl;
 }
